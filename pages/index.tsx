@@ -1,5 +1,5 @@
 
-import { Button, Card, Col, Row, Form, Input, Space } from 'antd';
+import { Button, Card, Col, Empty, Row, Form, Input, Space } from 'antd';
 import axios from 'axios';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -21,11 +21,13 @@ export default function GraphQLApiTypes() {
     !!graphqlApiEndpoint
   );
   const [authenticatedLoading, setAuthenticatedLoading] = useState(false)
+  const [error, setError] = useState("")
 
   const [authenticatedData, setAuthenticatedData] = useState<any>();
 
   const handleSubmit = (e: React.MouseEvent<HTMLElement>) => {
     setAuthenticatedLoading(true)
+    setError("")
     e.preventDefault();
     form
       .validateFields()
@@ -40,11 +42,14 @@ export default function GraphQLApiTypes() {
             },
           }
         );
-        setAuthenticatedLoading(false)
         setAuthenticatedData(resp.data);
       })
-      .catch((info) => {
-        console.log('Validate Failed:', info);
+      .catch((err) => {
+        console.log('Validate Failed:', err);
+        setError(err.message)
+        setAuthenticatedData(null)
+      }).finally(() => {
+        setAuthenticatedLoading(false)
       });
   };
 
@@ -64,7 +69,7 @@ export default function GraphQLApiTypes() {
             </Col>
             <Col sm={16}>
               <Card className={styles.result} loading={unAuthenticatedLoading}>
-                {unAuthenticatedData?.data}
+                {unAuthenticatedData?.data ? unAuthenticatedData?.data: <Empty description={unAuthenticatedError?.message} />}
               </Card>
             </Col>
           </Row>
@@ -92,7 +97,7 @@ export default function GraphQLApiTypes() {
                   <Input type='text' placeholder='Auth Token' />
                 </Form.Item>
                 <Space size={16}>
-                  <Button htmlType='submit' onClick={handleSubmit}>
+                  <Button htmlType='submit' onClick={handleSubmit} loading={authenticatedLoading}>
                     Fetch Types
                   </Button>
                 </Space>
@@ -100,7 +105,7 @@ export default function GraphQLApiTypes() {
             </Col>
             <Col sm={16}>
               <Card className={styles.result} loading={authenticatedLoading}>
-                {authenticatedData?.data}
+                {authenticatedData?.data ? authenticatedData?.data: <Empty description={error} />}
               </Card>
             </Col>
           </Row>
