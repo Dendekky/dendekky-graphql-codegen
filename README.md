@@ -25,6 +25,9 @@ If you want to fetch the types for a graqhql api that is protected, just return 
 Here, you can input your authorization and the endpoint, then, generate the types. 
 You can also fetch types for unauthenticated endpoints. Just leave the authorization field empty.
 
+## API
+The api is available on `api/codegen`. You can send the `graphqlApiEndpoint` as a query parameter or as the json body. For authenticated enpoints, pass the token with the `authorization` key in the request header
+
 
 ## TODO
 
