@@ -1,4 +1,4 @@
-This is a [GraphQL Codegen](https://the-guild.dev/graphql/codegen) web wrapper. This project was borne out of the need not to add an extra codegen step to the development process. 
+This is a [GraphQL Codegen](https://the-guild.dev/graphql/codegen) web wrapper. This project was borne out of the need to not add an extra codegen step to the development process. 
 ## Getting Started
 
 You can find the deployed page on [Graphql Codegen Web](https://dendekky-graphql-codegen.vercel.app/).
