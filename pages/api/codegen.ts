@@ -27,7 +27,7 @@ const webCodegen = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   let schemaOptions: any = {
     loaders: [new UrlLoader()],
   };
-  const { authorization } = req.body;
+  const { authorization } = req.headers;
   const graphqlApiEndpoint =
     req.body.graphqlApiEndpoint || req.query.graphqlApiEndpoint;
 
@@ -41,7 +41,7 @@ const webCodegen = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   const config = generateConfig(schema);
   const output = await codegen(config);
   const formattedStringOutput = output.replaceAll('\n', '');
-  return res.status(200).json({ data: formattedStringOutput });
+  return res.status(200).json({ data: output });
 };
 
 export default webCodegen;
