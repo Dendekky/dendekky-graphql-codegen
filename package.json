@@ -2,6 +2,9 @@
   "name": "graphql-codegen-web",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -13,8 +16,8 @@
     "@graphql-codegen/cli": "^5.0.2",
     "@graphql-codegen/core": "^4.0.2",
     "@graphql-codegen/typescript": "^4.0.9",
-    "@graphql-tools/load": "^8.0.2",
-    "@graphql-tools/url-loader": "^8.0.2",
+    "@graphql-tools/load": "^7.8.14",
+    "@graphql-tools/url-loader": "^7.17.18",
     "@radix-ui/react-slot": "^1.2.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -36,5 +39,8 @@
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.14",
     "typescript": "^5.6.3"
+  },
+  "resolutions": {
+    "graphql-ws": "5.16.0"
   }
 }
