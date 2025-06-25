@@ -135,7 +135,7 @@ function GraphQLCodegenContent() {
             
             {!loading && !result && !error && (
               <div className="text-center text-muted-foreground p-8">
-                <p>Enter a GraphQL endpoint and click "Generate Types" to get started</p>
+                <p>Enter a GraphQL endpoint and click &quot;Generate Types&quot; to get started</p>
               </div>
             )}
           </CardContent>
