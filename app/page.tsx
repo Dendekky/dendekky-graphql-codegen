@@ -12,6 +12,8 @@ import { useTheme } from 'next-themes'
 import { Suspense } from 'react'
 import { Copy, Check, Download, Zap, Code2, Sparkles, Clock, Database, Keyboard, X } from 'lucide-react'
 import { HeadersInput } from '@/components/headers-input'
+import { OutputFormatModal } from '@/components/output-format-modal'
+import { OUTPUT_FORMATS } from '@/components/output-format-selector'
 
 function GraphQLCodegenContent() {
   const router = useRouter()
@@ -26,6 +28,8 @@ function GraphQLCodegenContent() {
   const [copied, setCopied] = useState(false)
   const [showShortcuts, setShowShortcuts] = useState(false)
   const [headers, setHeaders] = useState<Record<string, string>>({})
+  const [outputFormats, setOutputFormats] = useState<string[]>(['typescript'])
+  const [documents, setDocuments] = useState<string>('')
   
   // Performance metrics
   const [generationTime, setGenerationTime] = useState<number | null>(null)
@@ -43,6 +47,16 @@ function GraphQLCodegenContent() {
       return
     }
 
+    // Check if documents are required for selected formats
+    const requiresDocuments = outputFormats.some(format => 
+      OUTPUT_FORMATS.find(f => f.id === format)?.requiresDocuments
+    )
+    
+    if (requiresDocuments && !documents.trim()) {
+      setError('GraphQL operations are required for the selected output formats')
+      return
+    }
+
     // Create new AbortController for this request
     const controller = new AbortController()
     setAbortController(controller)
@@ -57,7 +71,7 @@ function GraphQLCodegenContent() {
     const startTime = performance.now()
 
     try {
-      const response = await generateTypes(endpoint.trim(), headers, controller.signal)
+      const response = await generateTypes(endpoint.trim(), headers, outputFormats, documents, controller.signal)
       
       // Don't process if request was cancelled
       if (controller.signal.aborted) {
@@ -104,6 +118,8 @@ function GraphQLCodegenContent() {
     router.push('/')
     setEndpoint('')
     setHeaders({})
+    setOutputFormats(['typescript'])
+    setDocuments('')
     setResult('')
     setError('')
     setCopied(false)
@@ -342,6 +358,22 @@ function GraphQLCodegenContent() {
                   headers={headers} 
                   onChange={setHeaders} 
                 />
+                
+                {/* Output Format Modal */}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Output Format</h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      Currently generating: {outputFormats.length === 1 ? OUTPUT_FORMATS.find(f => f.id === outputFormats[0])?.name || 'Basic Types' : `${outputFormats.length} formats`}
+                    </p>
+                  </div>
+                  <OutputFormatModal
+                    selectedFormats={outputFormats}
+                    onFormatsChange={setOutputFormats}
+                    documents={documents}
+                    onDocumentsChange={setDocuments}
+                  />
+                </div>
                 <div className="flex gap-3">
                   <Button 
                     type="submit" 
@@ -356,7 +388,7 @@ function GraphQLCodegenContent() {
                     ) : (
                       <>
                         <Sparkles className="h-5 w-5 mr-2" />
-                        Generate Types
+                        Generate {outputFormats.length === 1 ? OUTPUT_FORMATS.find(f => f.id === outputFormats[0])?.name || 'Types' : `${outputFormats.length} Formats`}
                         <kbd className="ml-2 px-1.5 py-0.5 bg-white/20 rounded text-xs">Ctrl+↵</kbd>
                       </>
                     )}
@@ -500,15 +532,38 @@ function GraphQLCodegenContent() {
               )}
               
               {result && (
-                <div className="relative">
-                  <Textarea
-                    value={result}
-                    readOnly
-                    className="font-mono text-sm min-h-[400px] resize-none border-2 border-gray-200 dark:border-gray-700 rounded-xl shadow-inner bg-gray-50/50 dark:bg-gray-900/50 focus:ring-2 focus:ring-purple-500 transition-all duration-200"
-                    placeholder="Generated TypeScript types will appear here..."
-                  />
-                  <div className="absolute top-3 right-3 px-2 py-1 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 text-xs font-medium rounded-md">
-                    TypeScript
+                <div className="space-y-4">
+                  {/* Format Info */}
+                  <div className="p-3 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/30 dark:to-blue-950/30 rounded-xl border border-purple-200 dark:border-purple-800">
+                    <h4 className="font-semibold text-purple-800 dark:text-purple-200 mb-2 flex items-center">
+                      <Code2 className="h-4 w-4 mr-2" />
+                      Generated Formats
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {outputFormats.map((format) => {
+                        const formatInfo = OUTPUT_FORMATS.find(f => f.id === format)
+                        const Icon = formatInfo?.icon || Code2
+                        return (
+                          <div key={format} className="flex items-center gap-1 px-2 py-1 bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 text-xs font-medium rounded-md">
+                            <Icon className="h-3 w-3" />
+                            {formatInfo?.name || format}
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Generated Code */}
+                  <div className="relative">
+                    <Textarea
+                      value={result}
+                      readOnly
+                      className="font-mono text-sm min-h-[400px] resize-none border-2 border-gray-200 dark:border-gray-700 rounded-xl shadow-inner bg-gray-50/50 dark:bg-gray-900/50 focus:ring-2 focus:ring-purple-500 transition-all duration-200"
+                      placeholder="Generated TypeScript types will appear here..."
+                    />
+                    <div className="absolute top-3 right-3 px-2 py-1 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 text-xs font-medium rounded-md">
+                      TypeScript
+                    </div>
                   </div>
                 </div>
               )}
