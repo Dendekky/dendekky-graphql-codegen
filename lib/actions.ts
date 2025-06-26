@@ -105,7 +105,10 @@ const generateConfig = (
   }
 
   return {
-    documents: documents ? [{ content: documents }] : [],
+    documents: documents ? [{
+      location: 'operations.graphql',
+      document: parse(documents)
+    }] : [],
     config,
     filename: '',
     schema: parse(printSchema(schema)),
