@@ -72,18 +72,15 @@ function GraphQLCodegenContent() {
   return (
     <div className="container mx-auto p-6 max-w-6xl">
       <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <div></div>
-          <ModeToggle />
-        </div>
-        <div className="text-center">
-          <h1 className="text-4xl font-bold tracking-tight mb-2">
+        <div className="flex items-center justify-between mb-2">
+          <h1 className="text-4xl font-bold tracking-tight">
             GraphQL Codegen Web Wrapper
           </h1>
-          <p className="text-muted-foreground">
-            Generate TypeScript types from GraphQL schemas
-          </p>
+          <ModeToggle />
         </div>
+        <p className="text-muted-foreground">
+          Generate TypeScript types from GraphQL schemas
+        </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
