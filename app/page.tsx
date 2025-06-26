@@ -9,7 +9,7 @@ import { ModeToggle } from '@/components/mode-toggle'
 import { generateTypes } from '@/lib/actions'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
-import { Copy, Check } from 'lucide-react'
+import { Copy, Check, Download } from 'lucide-react'
 
 function GraphQLCodegenContent() {
   const router = useRouter()
@@ -67,6 +67,25 @@ function GraphQLCodegenContent() {
     } catch (err) {
       console.error('Failed to copy:', err)
     }
+  }
+
+  const handleDownload = () => {
+    if (!result) return
+    
+    // Create blob with TypeScript content
+    const blob = new Blob([result], { type: 'text/typescript' })
+    const url = URL.createObjectURL(blob)
+    
+    // Create download link
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'generated-types.ts'
+    document.body.appendChild(a)
+    a.click()
+    
+    // Cleanup
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
   }
 
   return (
@@ -127,29 +146,40 @@ function GraphQLCodegenContent() {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle>Generated Types</CardTitle>
-                <CardDescription>
+                {/* <CardDescription>
                   TypeScript type definitions will appear here
-                </CardDescription>
+                </CardDescription> */}
               </div>
               {result && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleCopy}
-                  className="flex items-center gap-2"
-                >
-                  {copied ? (
-                    <>
-                      <Check className="h-4 w-4" />
-                      Copied!
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="h-4 w-4" />
-                      Copy
-                    </>
-                  )}
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleCopy}
+                    className="flex items-center gap-2"
+                  >
+                    {copied ? (
+                      <>
+                        <Check className="h-4 w-4" />
+                        Copied!
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="h-4 w-4" />
+                        Copy
+                      </>
+                    )}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleDownload}
+                    className="flex items-center gap-2"
+                  >
+                    <Download className="h-4 w-4" />
+                    Download
+                  </Button>
+                </div>
               )}
             </div>
           </CardHeader>
