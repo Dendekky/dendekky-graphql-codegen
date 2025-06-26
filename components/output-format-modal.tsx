@@ -14,52 +14,44 @@ import {
 } from '@/components/ui/dialog'
 import { OutputFormatSelector, OUTPUT_FORMATS } from '@/components/output-format-selector'
 import { DocumentsInput } from '@/components/documents-input'
+import { useCodegenStore, useIsBasicTypescript } from '@/lib/store'
 import { Settings, Code2, Zap, FileText } from 'lucide-react'
 
-interface OutputFormatModalProps {
-  selectedFormats: string[]
-  onFormatsChange: (formats: string[]) => void
-  documents: string
-  onDocumentsChange: (documents: string) => void
-}
-
-export function OutputFormatModal({ 
-  selectedFormats, 
-  onFormatsChange, 
-  documents, 
-  onDocumentsChange 
-}: OutputFormatModalProps) {
+export function OutputFormatModal() {
   const [isOpen, setIsOpen] = useState(false)
-  const [tempFormats, setTempFormats] = useState<string[]>(selectedFormats)
-  const [tempDocuments, setTempDocuments] = useState<string>(documents)
+  const [tempFormats, setTempFormats] = useState<string[]>([])
+  const [tempDocuments, setTempDocuments] = useState<string>('')
+
+  // Zustand store hooks
+  const { outputFormats, documents, setOutputFormats, setDocuments } = useCodegenStore()
+  const isBasicTypescript = useIsBasicTypescript()
 
   const handleOpen = () => {
     // Reset temp state to current values when opening
-    setTempFormats(selectedFormats)
+    setTempFormats(outputFormats)
     setTempDocuments(documents)
     setIsOpen(true)
   }
 
   const handleSave = () => {
-    onFormatsChange(tempFormats)
-    onDocumentsChange(tempDocuments)
+    setOutputFormats(tempFormats)
+    setDocuments(tempDocuments)
     setIsOpen(false)
   }
 
   const handleCancel = () => {
     // Reset temp state to original values
-    setTempFormats(selectedFormats)
+    setTempFormats(outputFormats)
     setTempDocuments(documents)
     setIsOpen(false)
   }
 
-  const requiresDocuments = tempFormats.some(format => 
+  const requiresDocuments = tempFormats.some((format: string) => 
     OUTPUT_FORMATS.find(f => f.id === format)?.requiresDocuments
   )
 
-  const isBasicTypescript = selectedFormats.length === 1 && selectedFormats[0] === 'typescript'
-  const formatCount = selectedFormats.length
-  const hasAdvancedFormats = selectedFormats.some(format => format !== 'typescript')
+  const formatCount = outputFormats.length
+  const hasAdvancedFormats = outputFormats.some((format: string) => format !== 'typescript')
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -82,20 +74,20 @@ export function OutputFormatModal({
             </Badge>
           )}
           
-          {hasAdvancedFormats && (
-            <div className="flex items-center gap-1">
-              {selectedFormats.slice(0, 3).map((format) => {
-                const formatInfo = OUTPUT_FORMATS.find(f => f.id === format)
-                const Icon = formatInfo?.icon || Code2
-                return (
-                  <Icon key={format} className="h-3 w-3 text-blue-400" />
-                )
-              })}
-              {selectedFormats.length > 3 && (
-                <span className="text-xs text-blue-400">+{selectedFormats.length - 3}</span>
-              )}
-            </div>
-          )}
+                       {hasAdvancedFormats && (
+             <div className="flex items-center gap-1">
+               {outputFormats.slice(0, 3).map((format: string) => {
+                 const formatInfo = OUTPUT_FORMATS.find(f => f.id === format)
+                 const Icon = formatInfo?.icon || Code2
+                 return (
+                   <Icon key={format} className="h-3 w-3 text-blue-400" />
+                 )
+               })}
+               {outputFormats.length > 3 && (
+                 <span className="text-xs text-blue-400">+{outputFormats.length - 3}</span>
+               )}
+             </div>
+           )}
         </Button>
       </DialogTrigger>
 
