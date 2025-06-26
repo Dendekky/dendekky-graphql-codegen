@@ -29,7 +29,8 @@ This is a modern [GraphQL Codegen](https://the-guild.dev/graphql/codegen) web wr
 - **Smart file size formatting** (B/KB/MB)
 
 ### 🛠️ **Functionality**
-- **Public GraphQL endpoints** (no authentication required)
+- **Public & Private GraphQL endpoints** with custom header support 🔐
+- **Authentication headers** (Bearer tokens, API keys, custom headers)
 - **Copy to clipboard** with visual feedback 📋
 - **Download as .ts file** with proper TypeScript MIME type 📁
 - **Error handling** with user-friendly messages
@@ -64,11 +65,18 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ### Example Endpoints
 
-Try these public GraphQL APIs:
-
+#### **Public APIs** (No headers required)
 - **Star Wars API**: `https://swapi-graphql.netlify.app/.netlify/functions/index`
 - **Countries API**: `https://countries.trevorblades.com/`
 - **SpaceX API**: `https://spacex-production.up.railway.app/`
+
+#### **APIs with Custom Headers** (Expand headers section)
+- **GitHub GraphQL API**: `https://api.github.com/graphql`
+  - Header: `Authorization: Bearer YOUR_GITHUB_TOKEN`
+- **Shopify Admin API**: `https://YOUR_SHOP.myshopify.com/admin/api/2023-10/graphql.json`
+  - Header: `X-Shopify-Access-Token: YOUR_ACCESS_TOKEN`
+- **Hasura GraphQL**: `https://YOUR_HASURA_PROJECT.hasura.app/v1/graphql`
+  - Header: `x-hasura-admin-secret: YOUR_ADMIN_SECRET`
 
 ## 🏗️ Architecture
 
@@ -93,7 +101,6 @@ This project uses cutting-edge web technologies:
 ## 📝 Roadmap
 
 ### 🎯 **Next Priority Features**
-- [ ] **Custom Headers Support** - Add non-auth headers (API keys, content-type, etc.)
 - [ ] **Multiple Output Formats** - Support GraphQL operations, resolvers, hooks
 - [ ] **Schema Introspection Visualization** - Interactive schema explorer
 - [ ] **Schema Validation** - Real-time error highlighting and suggestions
@@ -120,6 +127,7 @@ This project uses cutting-edge web technologies:
 - ✅ **Keyboard Shortcuts** - Complete shortcut system with help modal
 - ✅ **Performance Metrics** - Real-time generation tracking
 - ✅ **Request Cancellation** - Abort long-running requests
+- ✅ **Custom Headers Support** - Authentication headers, API keys, and custom headers
 - ✅ **Next.js 15 Migration** - App Router with server actions
 - ✅ **shadcn/ui Integration** - Modern component library
 - ✅ **TypeScript 5.6** - Latest TypeScript features

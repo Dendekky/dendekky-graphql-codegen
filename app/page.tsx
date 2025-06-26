@@ -11,6 +11,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useTheme } from 'next-themes'
 import { Suspense } from 'react'
 import { Copy, Check, Download, Zap, Code2, Sparkles, Clock, Database, Keyboard, X } from 'lucide-react'
+import { HeadersInput } from '@/components/headers-input'
 
 function GraphQLCodegenContent() {
   const router = useRouter()
@@ -24,6 +25,7 @@ function GraphQLCodegenContent() {
   const [error, setError] = useState<string>('')
   const [copied, setCopied] = useState(false)
   const [showShortcuts, setShowShortcuts] = useState(false)
+  const [headers, setHeaders] = useState<Record<string, string>>({})
   
   // Performance metrics
   const [generationTime, setGenerationTime] = useState<number | null>(null)
@@ -55,7 +57,7 @@ function GraphQLCodegenContent() {
     const startTime = performance.now()
 
     try {
-      const response = await generateTypes(endpoint.trim(), controller.signal)
+      const response = await generateTypes(endpoint.trim(), headers, controller.signal)
       
       // Don't process if request was cancelled
       if (controller.signal.aborted) {
@@ -101,6 +103,7 @@ function GraphQLCodegenContent() {
     
     router.push('/')
     setEndpoint('')
+    setHeaders({})
     setResult('')
     setError('')
     setCopied(false)
@@ -333,6 +336,12 @@ function GraphQLCodegenContent() {
                     className="h-12 text-base border-2 border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 rounded-xl shadow-sm transition-all duration-200"
                   />
                 </div>
+                
+                {/* Headers Input */}
+                <HeadersInput 
+                  headers={headers} 
+                  onChange={setHeaders} 
+                />
                 <div className="flex gap-3">
                   <Button 
                     type="submit" 
@@ -352,7 +361,18 @@ function GraphQLCodegenContent() {
                       </>
                     )}
                   </Button>
-                  {(result || error) && (
+                  {loading && (
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      onClick={handleCancel}
+                      className="h-12 px-6 border-2 bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-900/50 text-red-600 dark:text-red-400 transition-all duration-200"
+                    >
+                      <X className="h-4 w-4 mr-2" />
+                      Cancel
+                    </Button>
+                  )}
+                  {(result || error) && !loading && (
                     <Button 
                       type="button" 
                       variant="outline" 
