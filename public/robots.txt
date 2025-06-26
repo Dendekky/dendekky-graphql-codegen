@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://graphqlcodegen.com/sitemap.xml
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1
+
+# Block unnecessary paths (if any)
+# Disallow: /admin/
+# Disallow: /_next/static/
+
+# Allow important resources
+Allow: /favicon.svg
+Allow: /codegen.png
+Allow: /_next/static/ 

@@ -735,6 +735,60 @@ function GraphQLCodegenContent() {
             </div>
           </CardContent>
         </Card>
+
+        {/* SEO Content Section - Moved below the tool */}
+        <Card className='mt-12 backdrop-blur-sm bg-white/80 dark:bg-gray-900/80 border-0 shadow-xl'>
+          <CardHeader>
+            <div className='flex items-center space-x-3'>
+              <div className='p-2 bg-gradient-to-br from-purple-400 to-pink-500 rounded-lg'>
+                <Code2 className='h-5 w-5 text-white' />
+              </div>
+              <CardTitle className='text-2xl font-bold'>
+                Why Use GraphQL Codegen Online?
+              </CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent className='prose prose-lg max-w-none dark:prose-invert'>
+            <p className='text-gray-600 dark:text-gray-300 mb-6'>
+              Transform your GraphQL schemas into TypeScript types instantly with our free online GraphQL Codegen tool. 
+              No installation required - just paste your GraphQL endpoint and generate production-ready TypeScript types, 
+              React Query hooks, GraphQL Request SDKs, and more.
+            </p>
+            
+            <h3 className='text-xl font-semibold mb-4 text-gray-900 dark:text-white'>
+              🚀 Key Features & Benefits:
+            </h3>
+            <div className='grid md:grid-cols-2 gap-4 not-prose'>
+              <div className='p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/50 dark:to-indigo-950/50 rounded-lg border border-blue-200 dark:border-blue-800'>
+                <h4 className='font-semibold text-blue-800 dark:text-blue-200 mb-2'>Multiple Output Formats</h4>
+                <p className='text-sm text-blue-700 dark:text-blue-300'>TypeScript types, React Query hooks, GraphQL Request SDK, Typed Document Nodes, and more.</p>
+              </div>
+              
+              <div className='p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/50 dark:to-emerald-950/50 rounded-lg border border-green-200 dark:border-green-800'>
+                <h4 className='font-semibold text-green-800 dark:text-green-200 mb-2'>Custom Headers Support</h4>
+                <p className='text-sm text-green-700 dark:text-green-300'>Work with authenticated APIs using Bearer tokens, API keys, and custom headers.</p>
+              </div>
+              
+              <div className='p-4 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/50 dark:to-pink-950/50 rounded-lg border border-purple-200 dark:border-purple-800'>
+                <h4 className='font-semibold text-purple-800 dark:text-purple-200 mb-2'>Real-time Generation</h4>
+                <p className='text-sm text-purple-700 dark:text-purple-300'>Instant code generation with performance metrics and file size tracking.</p>
+              </div>
+              
+              <div className='p-4 bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-950/50 dark:to-red-950/50 rounded-lg border border-orange-200 dark:border-orange-800'>
+                <h4 className='font-semibold text-orange-800 dark:text-orange-200 mb-2'>Developer-Friendly</h4>
+                <p className='text-sm text-orange-700 dark:text-orange-300'>Copy to clipboard, download files, keyboard shortcuts, and dark mode support.</p>
+              </div>
+            </div>
+            
+            <div className='mt-6 p-4 bg-gradient-to-r from-gray-50 to-slate-50 dark:from-gray-900 dark:to-slate-900 rounded-lg border border-gray-200 dark:border-gray-700'>
+              <h4 className='font-semibold text-gray-800 dark:text-gray-200 mb-2'>💝 Free & Secure</h4>
+              <p className='text-sm text-gray-600 dark:text-gray-300'>
+                No registration required, client-side processing, and completely open-source. 
+                Your GraphQL schemas never leave your browser.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
