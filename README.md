@@ -10,6 +10,9 @@ This is a modern [GraphQL Codegen](https://the-guild.dev/graphql/codegen) web wr
 - **TypeScript** support
 - **Public GraphQL endpoints** (no authentication required)
 - **Clean, modern UI** with responsive design
+- **Dark/Light mode toggle** 🌙☀️
+- **Copy to clipboard** functionality 📋
+- **Download as .ts file** 📁
 
 ## 🚀 Getting Started
 
@@ -41,9 +44,9 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 Try these public GraphQL APIs:
 
+- **Star Wars API**: `https://swapi-graphql.netlify.app/.netlify/functions/index`
 - **Countries API**: `https://countries.trevorblades.com/`
 - **SpaceX API**: `https://spacex-production.up.railway.app/`
-- **Star Wars API**: `https://swapi-graphql.netlify.app/.netlify/functions/index`
 
 ## 🏗️ Architecture
 
@@ -65,12 +68,25 @@ This project uses modern web technologies:
 
 ## 📝 TODO
 
-- [ ] Add dark mode toggle
-- [ ] Support for custom headers (non-auth)
+### 🎯 **Next Features**
+- [ ] Support for custom headers (non-auth use cases)
 - [ ] Multiple output format support (GraphQL operations, resolvers, etc.)
 - [ ] Schema introspection visualization
-- [ ] Copy to clipboard functionality
-- [ ] Download generated types as file
+- [ ] Keyboard shortcuts (Ctrl+Enter to generate, Ctrl+C to copy)
+- [ ] Schema validation and error highlighting
+- [ ] Export configuration presets
+- [ ] Batch processing for multiple endpoints
+
+### 🔧 **Technical Improvements**
+- [ ] Add loading skeletons for better UX
+- [ ] Implement caching for repeated schema requests
+- [ ] Add schema diff comparison
+- [ ] Performance metrics and generation time display
+
+### ✅ **Completed**
+- ✅ Add dark mode toggle
+- ✅ Copy to clipboard functionality
+- ✅ Download generated types as file
 
 ## 🤝 Contributing
 
