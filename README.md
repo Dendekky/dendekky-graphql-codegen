@@ -10,11 +10,13 @@ This is a modern [GraphQL Codegen](https://the-guild.dev/graphql/codegen) web wr
 - **Dark/Light mode toggle** with system preference detection 🌙☀️
 - **Animated blob backgrounds** with custom CSS animations
 - **Hover effects** and smooth transitions throughout
+- **Clean, uncluttered interface** optimized for both simple and advanced users
 
 ### ⚡ **Developer Experience**
 - **Next.js 15** with App Router for optimal performance
 - **Server Actions** replacing traditional API routes
 - **TypeScript** support with full type safety
+- **Advanced state management** with Zustand for optimal performance
 - **Keyboard shortcuts** for power users ⌨️
   - `Ctrl+Enter`: Generate types
   - `Ctrl+D`: Download types
@@ -22,19 +24,32 @@ This is a modern [GraphQL Codegen](https://the-guild.dev/graphql/codegen) web wr
   - `Ctrl+Shift+T`: Toggle theme
   - `Ctrl+/`: Show shortcuts help
 
+### 🚀 **Multiple Output Formats**
+- **TypeScript Types** - Basic schema types (default)
+- **TypeScript Operations** - Query/mutation types for operations
+- **GraphQL Request SDK** - Ready-to-use SDK with fetch methods
+- **Typed Document Node** - Pre-compiled DocumentNode for better performance
+- **React Query Hooks** - TanStack Query hooks for React applications
+- **TypeScript Resolvers** - Server-side resolver type signatures
+- **Smart Dependencies** - Automatically includes required base plugins
+- **Format Validation** - Ensures operations are provided when needed
+
 ### 📊 **Performance & Metrics**
 - **Real-time generation metrics** (time, file size, type count)
 - **Request cancellation** with AbortController
 - **Performance tracking** using high-precision timers
 - **Smart file size formatting** (B/KB/MB)
+- **Visual format indicators** showing which formats were generated
 
 ### 🛠️ **Functionality**
 - **Public & Private GraphQL endpoints** with custom header support 🔐
 - **Authentication headers** (Bearer tokens, API keys, custom headers)
+- **GraphQL Operations Input** for client SDK generation
 - **Copy to clipboard** with visual feedback 📋
 - **Download as .ts file** with proper TypeScript MIME type 📁
 - **Error handling** with user-friendly messages
 - **Loading states** with cancel functionality
+- **State persistence** - Form data persists across browser sessions
 
 ## 🚀 Getting Started
 
@@ -56,12 +71,23 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ### Web Interface
 
-1. **Direct Input**: Visit the homepage and enter your GraphQL endpoint in the input field
-2. **URL Parameter**: Pass the endpoint as a query parameter:
+1. **Basic Usage**: 
+   - Enter your GraphQL endpoint in the input field
+   - Click "Generate Types" or use `Ctrl+Enter`
+   - Copy or download the generated TypeScript types
+
+2. **Advanced Configuration**:
+   - Click "Output Formats" to access advanced options
+   - Select multiple output formats (TypeScript, React Query, etc.)
+   - Add GraphQL operations for client SDK generation
+   - Configure custom headers for authentication
+
+3. **URL Parameter**: Pass the endpoint as a query parameter:
    ```
    https://dendekky-graphql-codegen.vercel.app/?graphqlApiEndpoint=https://your-api.com/graphql
    ```
-3. **Keyboard Shortcuts**: Use `Ctrl+Enter` to generate, `Ctrl+D` to download, or `Ctrl+/` for help
+
+4. **Keyboard Shortcuts**: Use `Ctrl+Enter` to generate, `Ctrl+D` to download, or `Ctrl+/` for help
 
 ### Example Endpoints
 
@@ -93,6 +119,7 @@ This project uses cutting-edge web technologies:
 - [Next.js 15](https://nextjs.org/) - React framework with App Router
 - [React 19](https://react.dev/) - Latest React with concurrent features
 - [TypeScript 5.6](https://www.typescriptlang.org/) - Type-safe JavaScript
+- [Zustand](https://zustand-demo.pmnd.rs/) - Lightweight state management
 - [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
 - [shadcn/ui](https://ui.shadcn.com/) - High-quality React components
 - [next-themes](https://github.com/pacocoursey/next-themes) - Theme management
@@ -101,10 +128,10 @@ This project uses cutting-edge web technologies:
 ## 📝 Roadmap
 
 ### 🎯 **Next Priority Features**
-- [ ] **Multiple Output Formats** - Support GraphQL operations, resolvers, hooks
 - [ ] **Schema Introspection Visualization** - Interactive schema explorer
 - [ ] **Schema Validation** - Real-time error highlighting and suggestions
 - [ ] **Configuration Presets** - Save and reuse common configurations
+- [ ] **Auto-generation from URLs** - Automatically generate when URL contains endpoint
 
 ### 🔧 **Enhanced Developer Experience**
 - [ ] **Schema Diff Comparison** - Compare schemas between versions
@@ -131,6 +158,12 @@ This project uses cutting-edge web technologies:
 - ✅ **Next.js 15 Migration** - App Router with server actions
 - ✅ **shadcn/ui Integration** - Modern component library
 - ✅ **TypeScript 5.6** - Latest TypeScript features
+- ✅ **Multiple Output Formats** - TypeScript, React Query, GraphQL Request, Resolvers, etc.
+- ✅ **Advanced State Management** - Zustand for optimal performance and clean architecture
+- ✅ **Modal-based UI** - Clean interface with progressive disclosure
+- ✅ **GraphQL Operations Support** - Client SDK generation with operation inputs
+- ✅ **Smart Format Dependencies** - Automatic plugin dependency resolution
+- ✅ **State Persistence** - Form data persists across browser sessions
 
 ## 🤝 Contributing
 
