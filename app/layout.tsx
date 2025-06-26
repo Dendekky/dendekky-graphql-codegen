@@ -6,23 +6,23 @@ import { ThemeProvider } from '@/components/theme-provider';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'GraphQL Codegen Web Wrapper',
+  title: 'GraphQL Codegen Online',
   description: 'Generate TypeScript types from GraphQL schemas',
   metadataBase: new URL('https://graphql-codegen.vercel.app'),
   icons: {
     icon: '/favicon.svg',
   },
   openGraph: {
-    title: 'GraphQL Codegen Web Wrapper',
+    title: 'GraphQL Codegen Online',
     description: 'Generate TypeScript types from GraphQL schemas',
     url: 'https://graphql-codegen.vercel.app',
-    siteName: 'GraphQL Codegen Web Wrapper',
+    siteName: 'GraphQL Codegen Online',
     images: [
       {
         url: '/codegen.png',
         width: 1200,
         height: 630,
-        alt: 'GraphQL Codegen Web Wrapper',
+        alt: 'GraphQL Codegen Online',
       },
     ],
     locale: 'en_US',
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'GraphQL Codegen Web Wrapper',
+    title: 'GraphQL Codegen Online',
     description: 'Generate TypeScript types from GraphQL schemas',
     images: ['/codegen.png'],
   },

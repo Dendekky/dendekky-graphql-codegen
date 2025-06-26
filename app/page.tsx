@@ -356,7 +356,7 @@ function GraphQLCodegenContent() {
               </div>
               <div>
                 <h1 className='text-5xl font-black tracking-tight bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 dark:from-white dark:via-blue-200 dark:to-purple-200 bg-clip-text text-transparent'>
-                  GraphQL Codegen Web Wrapper
+                  GraphQL Codegen Online
                 </h1>
               </div>
             </div>

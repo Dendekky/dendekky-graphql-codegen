@@ -1,4 +1,4 @@
-# GraphQL Codegen Web Wrapper
+# GraphQL Codegen Online
 
 This is a modern [GraphQL Codegen](https://the-guild.dev/graphql/codegen) web wrapper built with Next.js 15, featuring a stunning glassmorphism UI and comprehensive developer experience. This project eliminates the need for an extra codegen step in your development process.
 
@@ -53,7 +53,7 @@ This is a modern [GraphQL Codegen](https://the-guild.dev/graphql/codegen) web wr
 
 ## 🚀 Getting Started
 
-You can find the deployed page on [GraphQL Codegen Web](https://graphql-codegen.vercel.app/).
+You can find the deployed page on [GraphQL Codegen Online](https://graphql-codegen.vercel.app/).
 
 To run locally:
 
@@ -69,7 +69,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## 📖 How to Use
 
-### Web Interface
+### Online Interface
 
 1. **Basic Usage**: 
    - Enter your GraphQL endpoint in the input field
