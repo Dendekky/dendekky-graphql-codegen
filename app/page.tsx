@@ -10,7 +10,7 @@ import { generateTypes } from '@/lib/actions'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useTheme } from 'next-themes'
 import { Suspense } from 'react'
-import { Copy, Check, Download, Zap, Code2, Sparkles, Clock, Database, Keyboard } from 'lucide-react'
+import { Copy, Check, Download, Zap, Code2, Sparkles, Clock, Database, Keyboard, X } from 'lucide-react'
 
 function GraphQLCodegenContent() {
   const router = useRouter()
@@ -29,6 +29,9 @@ function GraphQLCodegenContent() {
   const [generationTime, setGenerationTime] = useState<number | null>(null)
   const [schemaSize, setSchemaSize] = useState<number | null>(null)
   const [typeCount, setTypeCount] = useState<number | null>(null)
+  
+  // Request cancellation
+  const [abortController, setAbortController] = useState<AbortController | null>(null)
 
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault()
@@ -37,6 +40,10 @@ function GraphQLCodegenContent() {
       setError('Please enter a GraphQL endpoint')
       return
     }
+
+    // Create new AbortController for this request
+    const controller = new AbortController()
+    setAbortController(controller)
 
     setLoading(true)
     setError('')
@@ -48,7 +55,12 @@ function GraphQLCodegenContent() {
     const startTime = performance.now()
 
     try {
-      const response = await generateTypes(endpoint.trim())
+      const response = await generateTypes(endpoint.trim(), controller.signal)
+      
+      // Don't process if request was cancelled
+      if (controller.signal.aborted) {
+        return
+      }
       
       const endTime = performance.now()
       const timeTaken = Math.round(endTime - startTime)
@@ -69,18 +81,30 @@ function GraphQLCodegenContent() {
         setError(response.error || 'Failed to generate types')
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unexpected error occurred')
+      if (!controller.signal.aborted) {
+        setError(err instanceof Error ? err.message : 'An unexpected error occurred')
+      }
     } finally {
-      setLoading(false)
+      if (!controller.signal.aborted) {
+        setLoading(false)
+      }
+      setAbortController(null)
     }
   }
 
   const handleClear = useCallback(() => {
+    // Cancel any ongoing request first
+    if (abortController) {
+      abortController.abort()
+      setAbortController(null)
+    }
+    
     router.push('/')
     setEndpoint('')
     setResult('')
     setError('')
     setCopied(false)
+    setLoading(false)
     setGenerationTime(null)
     setSchemaSize(null)
     setTypeCount(null)
@@ -89,7 +113,7 @@ function GraphQLCodegenContent() {
       const input = document.querySelector('input[type="url"]') as HTMLInputElement
       input?.focus()
     }, 100)
-  }, [router])
+  }, [router, abortController])
 
   const handleCopy = useCallback(async () => {
     if (!result) return
@@ -126,6 +150,15 @@ function GraphQLCodegenContent() {
     setTheme(theme === 'dark' ? 'light' : 'dark')
   }, [theme, setTheme])
 
+  const handleCancel = useCallback(() => {
+    if (abortController) {
+      abortController.abort()
+      setAbortController(null)
+      setLoading(false)
+      setError('Request was cancelled')
+    }
+  }, [abortController])
+
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -143,11 +176,13 @@ function GraphQLCodegenContent() {
         handleDownload()
       }
       
-      // Escape - Close modal first, then clear form
+      // Escape - Close modal first, cancel request, then clear form
       if (e.key === 'Escape') {
         e.preventDefault()
         if (showShortcuts) {
           setShowShortcuts(false)
+        } else if (loading && abortController) {
+          handleCancel()
         } else {
           handleClear()
         }
@@ -168,7 +203,7 @@ function GraphQLCodegenContent() {
 
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [loading, endpoint, result, handleSubmit, handleDownload, handleClear, toggleTheme, showShortcuts])
+  }, [loading, endpoint, result, handleSubmit, handleDownload, handleClear, handleCancel, toggleTheme, showShortcuts, abortController])
 
   const formatFileSize = (bytes: number) => {
     if (bytes < 1024) return `${bytes} B`
@@ -425,6 +460,15 @@ function GraphQLCodegenContent() {
                     <div className="animate-spin rounded-full h-12 w-12 border-4 border-purple-500 border-t-transparent absolute top-0"></div>
                   </div>
                   <p className="text-lg font-medium text-purple-600 dark:text-purple-400">Generating awesome types...</p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleCancel}
+                    className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/30 border-red-200 dark:border-red-800"
+                  >
+                    <X className="h-4 w-4" />
+                    Cancel Request
+                  </Button>
                 </div>
               )}
               

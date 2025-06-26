@@ -19,7 +19,7 @@ const generateConfig = (schema: GraphQLSchema) => ({
   },
 })
 
-export async function generateTypes(graphqlApiEndpoint: string) {
+export async function generateTypes(graphqlApiEndpoint: string, signal?: AbortSignal) {
   try {
     // Dynamic import to avoid SSR issues with GraphQL Tools
     const { loadSchema } = await import('@graphql-tools/load')
@@ -27,6 +27,11 @@ export async function generateTypes(graphqlApiEndpoint: string) {
     
     const schemaOptions = {
       loaders: [new UrlLoader()],
+      ...(signal && {
+        fetchOptions: {
+          signal
+        }
+      })
     }
     
     const schema = await loadSchema(graphqlApiEndpoint, schemaOptions)
@@ -35,6 +40,14 @@ export async function generateTypes(graphqlApiEndpoint: string) {
     
     return { success: true, data: output }
   } catch (error) {
+    // Check if error is due to cancellation
+    if (error instanceof Error && (error.name === 'AbortError' || error.message.includes('aborted'))) {
+      return { 
+        success: false, 
+        error: 'Request was cancelled' 
+      }
+    }
+    
     console.error('Error generating types:', error)
     return { 
       success: false, 
