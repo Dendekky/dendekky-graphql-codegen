@@ -53,7 +53,7 @@ This is a modern [GraphQL Codegen](https://the-guild.dev/graphql/codegen) web wr
 
 ## 🚀 Getting Started
 
-You can find the deployed page on [GraphQL Codegen Web](https://dendekky-graphql-codegen.vercel.app/).
+You can find the deployed page on [GraphQL Codegen Web](https://graphql-codegen.vercel.app/).
 
 To run locally:
 
@@ -84,7 +84,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 3. **URL Parameter**: Pass the endpoint as a query parameter:
    ```
-   https://dendekky-graphql-codegen.vercel.app/?graphqlApiEndpoint=https://your-api.com/graphql
+   https://graphql-codegen.vercel.app/?graphqlApiEndpoint=https://your-api.com/graphql
    ```
 
 4. **Keyboard Shortcuts**: Use `Ctrl+Enter` to generate, `Ctrl+D` to download, or `Ctrl+/` for help
