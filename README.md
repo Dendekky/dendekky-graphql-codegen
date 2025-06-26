@@ -41,9 +41,9 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 Try these public GraphQL APIs:
 
-- **Star Wars API**: `https://swapi-graphql.netlify.app/.netlify/functions/index`
 - **Countries API**: `https://countries.trevorblades.com/`
 - **SpaceX API**: `https://spacex-production.up.railway.app/`
+- **Star Wars API**: `https://swapi-graphql.netlify.app/.netlify/functions/index`
 
 ## 🏗️ Architecture
 

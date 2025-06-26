@@ -5,9 +5,11 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import { ModeToggle } from '@/components/mode-toggle'
 import { generateTypes } from '@/lib/actions'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
+import { Copy, Check } from 'lucide-react'
 
 function GraphQLCodegenContent() {
   const router = useRouter()
@@ -18,6 +20,7 @@ function GraphQLCodegenContent() {
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<string>('')
   const [error, setError] = useState<string>('')
+  const [copied, setCopied] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -51,17 +54,36 @@ function GraphQLCodegenContent() {
     setEndpoint('')
     setResult('')
     setError('')
+    setCopied(false)
+  }
+
+  const handleCopy = async () => {
+    if (!result) return
+    
+    try {
+      await navigator.clipboard.writeText(result)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (err) {
+      console.error('Failed to copy:', err)
+    }
   }
 
   return (
     <div className="container mx-auto p-6 max-w-6xl">
-      <div className="mb-8 text-center">
-        <h1 className="text-4xl font-bold tracking-tight mb-2">
-          GraphQL Codegen Web Wrapper
-        </h1>
-        <p className="text-muted-foreground">
-          Generate TypeScript types from GraphQL schemas
-        </p>
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <div></div>
+          <ModeToggle />
+        </div>
+        <div className="text-center">
+          <h1 className="text-4xl font-bold tracking-tight mb-2">
+            GraphQL Codegen Web Wrapper
+          </h1>
+          <p className="text-muted-foreground">
+            Generate TypeScript types from GraphQL schemas
+          </p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -105,10 +127,34 @@ function GraphQLCodegenContent() {
         {/* Output Section */}
         <Card>
           <CardHeader>
-            <CardTitle>Generated Types</CardTitle>
-            <CardDescription>
-              TypeScript type definitions will appear here
-            </CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>Generated Types</CardTitle>
+                <CardDescription>
+                  TypeScript type definitions will appear here
+                </CardDescription>
+              </div>
+              {result && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleCopy}
+                  className="flex items-center gap-2"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="h-4 w-4" />
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-4 w-4" />
+                      Copy
+                    </>
+                  )}
+                </Button>
+              )}
+            </div>
           </CardHeader>
           <CardContent>
             {loading && (

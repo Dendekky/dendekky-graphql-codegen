@@ -4209,6 +4209,7 @@ __metadata:
     graphql: ^16.9.0
     lucide-react: ^0.453.0
     next: ^15.0.3
+    next-themes: ^0.4.4
     postcss: ^8.4.47
     react: ^19.0.0
     react-dom: ^19.0.0
@@ -5447,6 +5448,16 @@ __metadata:
   version: 1.0.0
   resolution: "negotiator@npm:1.0.0"
   checksum: 20ebfe79b2d2e7cf9cbc8239a72662b584f71164096e6e8896c8325055497c96f6b80cd22c258e8a2f2aa382a787795ec3ee8b37b422a302c7d4381b0d5ecfbb
+  languageName: node
+  linkType: hard
+
+"next-themes@npm:^0.4.4":
+  version: 0.4.6
+  resolution: "next-themes@npm:0.4.6"
+  peerDependencies:
+    react: ^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc
+    react-dom: ^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc
+  checksum: 295256ee5689629e6578ff4f10f163257172085cac0a250f5f81eae5791fde984a0398be09b959a90c12cf72cf95e82ae11fad6fe13edc4e2d2a6ec2734be0cd
   languageName: node
   linkType: hard
 
