@@ -33,6 +33,8 @@ import { OutputFormatModal } from '@/components/output-format-modal';
 import { OUTPUT_FORMATS } from '@/components/output-format-selector';
 import { InputModeToggle } from '@/components/input-mode-toggle';
 import { SchemaInput } from '@/components/schema-input';
+import { CopyableCode } from '@/components/copyable-code';
+import { CopyableText } from '@/components/copyable-text';
 import {
   useCodegenStore,
   useRequiresDocuments,
@@ -390,7 +392,7 @@ function GraphQLCodegenContent() {
           </div>
         </div>
 
-        <div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
+        <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 min-h-[600px]'>
           {/* Input Section */}
           <Card className='backdrop-blur-sm bg-white/80 dark:bg-gray-900/80 border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]'>
             <CardHeader className='pb-4'>
@@ -561,7 +563,7 @@ function GraphQLCodegenContent() {
           </Card>
 
           {/* Output Section */}
-          <Card className='backdrop-blur-sm bg-white/80 dark:bg-gray-900/80 border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]'>
+          <Card className='backdrop-blur-sm bg-white/80 dark:bg-gray-900/80 border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] flex flex-col'>
             <CardHeader className='pb-4'>
               <div className='flex items-center justify-between'>
                 <div className='flex items-center space-x-3'>
@@ -610,7 +612,7 @@ function GraphQLCodegenContent() {
                 )}
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className='flex-1 flex flex-col'>
               {loading && (
                 <div className='flex flex-col items-center justify-center p-12 space-y-4'>
                   <div className='relative'>
@@ -642,38 +644,13 @@ function GraphQLCodegenContent() {
               )}
 
               {result && (
-                <div className='space-y-4'>
-                  {/* Format Info */}
-                  <div className='p-3 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/30 dark:to-blue-950/30 rounded-xl border border-purple-200 dark:border-purple-800'>
-                    <h4 className='font-semibold text-purple-800 dark:text-purple-200 mb-2 flex items-center'>
-                      <Code2 className='h-4 w-4 mr-2' />
-                      Generated Formats
-                    </h4>
-                    <div className='flex flex-wrap gap-2'>
-                      {outputFormats.map((format) => {
-                        const formatInfo = OUTPUT_FORMATS.find(
-                          (f) => f.id === format
-                        );
-                        const Icon = formatInfo?.icon || Code2;
-                        return (
-                          <div
-                            key={format}
-                            className='flex items-center gap-1 px-2 py-1 bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 text-xs font-medium rounded-md'
-                          >
-                            <Icon className='h-3 w-3' />
-                            {formatInfo?.name || format}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-
+                <div className='flex-1 flex flex-col space-y-4'>
                   {/* Generated Code */}
-                  <div className='relative'>
+                  <div className='relative flex-1'>
                     <Textarea
                       value={result}
                       readOnly
-                      className='font-mono text-sm min-h-[400px] resize-none border-2 border-gray-200 dark:border-gray-700 rounded-xl shadow-inner bg-gray-50/50 dark:bg-gray-900/50 focus:ring-2 focus:ring-purple-500 transition-all duration-200'
+                      className='font-mono text-sm h-full resize-none border-2 border-gray-200 dark:border-gray-700 rounded-xl shadow-inner bg-gray-50/50 dark:bg-gray-900/50 focus:ring-2 focus:ring-purple-500 transition-all duration-200'
                       placeholder='Generated TypeScript types will appear here...'
                     />
                     <div className='absolute top-3 right-3 px-2 py-1 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 text-xs font-medium rounded-md'>
@@ -726,10 +703,14 @@ function GraphQLCodegenContent() {
                 <p className='text-sm text-blue-700 dark:text-blue-300 mb-3'>
                   You can also pass the GraphQL endpoint as a URL parameter:
                 </p>
-                <code className='block p-3 bg-blue-100 dark:bg-blue-900/50 rounded-lg text-sm font-mono border border-blue-200 dark:border-blue-700'>
-                  {typeof window !== 'undefined' && window.location.origin}
-                  /?graphqlApiEndpoint=https://spacex-production.up.railway.app/
-                </code>
+                <CopyableCode
+                  code={`${typeof window !== 'undefined' ? window.location.origin : 'https://graphqlcodegen.com'}/?graphqlApiEndpoint=https://spacex-production.up.railway.app/`}
+                >
+                  <code className='block p-3 bg-blue-100 dark:bg-blue-900/50 rounded-lg text-sm font-mono border border-blue-200 dark:border-blue-700'>
+                    {typeof window !== 'undefined' && window.location.origin}
+                    /?graphqlApiEndpoint=https://spacex-production.up.railway.app/
+                  </code>
+                </CopyableCode>
               </div>
 
               <div className='p-4 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/50 dark:to-pink-950/50 rounded-xl border border-purple-200 dark:border-purple-800'>
@@ -739,16 +720,45 @@ function GraphQLCodegenContent() {
                 <p className='text-sm text-purple-700 dark:text-purple-300 mb-3'>
                   Paste GraphQL schema definitions directly:
                 </p>
-                <code className='block p-3 bg-purple-100 dark:bg-purple-900/50 rounded-lg text-sm font-mono border border-purple-200 dark:border-purple-700'>
-                  {`type Query {
+                <CopyableCode
+                  code={`type Query {
   user: User
+  posts: [Post!]!
 }
 
 type User {
   id: ID!
   name: String!
+  email: String!
+}
+
+type Post {
+  id: ID!
+  title: String!
+  content: String!
+  author: User!
 }`}
-                </code>
+                >
+                  <code className='block p-3 bg-purple-100 dark:bg-purple-900/50 rounded-lg text-sm font-mono border border-purple-200 dark:border-purple-700'>
+                    {`type Query {
+  user: User
+  posts: [Post!]!
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+}
+
+type Post {
+  id: ID!
+  title: String!
+  content: String!
+  author: User!
+}`}
+                  </code>
+                </CopyableCode>
               </div>
 
               <div className='p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/50 dark:to-emerald-950/50 rounded-xl border border-green-200 dark:border-green-800'>
@@ -759,24 +769,31 @@ type User {
                   Try these public GraphQL APIs:
                 </p>
                 <ul className='text-sm text-green-700 dark:text-green-300 space-y-2'>
-                  <li className='flex items-center space-x-2'>
-                    <div className='w-2 h-2 bg-green-500 rounded-full'></div>
-                    <span>
-                      Countries API: https://countries.trevorblades.com/
-                    </span>
+                  <li>
+                    <CopyableText text="https://countries.trevorblades.com/">
+                      <div className='flex items-center space-x-2'>
+                        <div className='w-2 h-2 bg-green-500 rounded-full'></div>
+                        <span>Countries API: https://countries.trevorblades.com/</span>
+                      </div>
+                    </CopyableText>
                   </li>
-                  <li className='flex items-center space-x-2'>
-                    <div className='w-2 h-2 bg-green-500 rounded-full'></div>
-                    <span>
-                      SpaceX API: https://spacex-production.up.railway.app/
-                    </span>
+                  <li>
+                    <CopyableText text="https://spacex-production.up.railway.app/">
+                      <div className='flex items-center space-x-2'>
+                        <div className='w-2 h-2 bg-green-500 rounded-full'></div>
+                        <span>SpaceX API: https://spacex-production.up.railway.app/</span>
+                      </div>
+                    </CopyableText>
                   </li>
-                  <li className='flex items-center space-x-2'>
-                    <div className='w-2 h-2 bg-green-500 rounded-full'></div>
-                    <span>
-                      Star Wars API:
-                      https://swapi-graphql.netlify.app/.netlify/functions/index
-                    </span>
+                  <li>
+                    <CopyableText text="https://swapi-graphql.netlify.app/.netlify/functions/index">
+                      <div className='flex items-center space-x-2'>
+                        <div className='w-2 h-2 bg-green-500 rounded-full'></div>
+                        <span>
+                          Star Wars API: https://swapi-graphql.netlify.app/.netlify/functions/index
+                        </span>
+                      </div>
+                    </CopyableText>
                   </li>
                 </ul>
               </div>

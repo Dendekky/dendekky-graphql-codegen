@@ -11,6 +11,15 @@ This is a modern [GraphQL Codegen](https://the-guild.dev/graphql/codegen) web wr
 - **Animated blob backgrounds** with custom CSS animations
 - **Hover effects** and smooth transitions throughout
 - **Clean, uncluttered interface** optimized for both simple and advanced users
+- **Full-height output area** that expands to use all available space
+- **Interactive copyable examples** with hover-to-reveal copy buttons
+
+### 🔄 **Dual Input Modes**
+- **GraphQL Endpoint Mode** - Connect to live GraphQL APIs with custom headers
+- **Schema Definition Mode** - Paste GraphQL schema definitions directly
+- **Seamless switching** between input modes with preserved state
+- **Visual guidance** and format hints for schema definitions
+- **Line count display** for schema definition input
 
 ### ⚡ **Developer Experience**
 - **Next.js 15** with App Router for optimal performance
@@ -23,6 +32,7 @@ This is a modern [GraphQL Codegen](https://the-guild.dev/graphql/codegen) web wr
   - `Escape`: Cancel requests or clear
   - `Ctrl+Shift+T`: Toggle theme
   - `Ctrl+/`: Show shortcuts help
+- **URL parameter support** for quick sharing and bookmarking
 
 ### 🚀 **Multiple Output Formats**
 - **TypeScript Types** - Basic schema types (default)
@@ -43,6 +53,7 @@ This is a modern [GraphQL Codegen](https://the-guild.dev/graphql/codegen) web wr
 
 ### 🛠️ **Functionality**
 - **Public & Private GraphQL endpoints** with custom header support 🔐
+- **Direct schema definition input** for offline development 📝
 - **Authentication headers** (Bearer tokens, API keys, custom headers)
 - **GraphQL Operations Input** for client SDK generation
 - **Copy to clipboard** with visual feedback 📋
@@ -50,6 +61,15 @@ This is a modern [GraphQL Codegen](https://the-guild.dev/graphql/codegen) web wr
 - **Error handling** with user-friendly messages
 - **Loading states** with cancel functionality
 - **State persistence** - Form data persists across browser sessions
+
+### 🔍 **SEO & Discoverability**
+- **Comprehensive metadata** with targeted keywords and descriptions
+- **Structured data (JSON-LD)** for enhanced search engine understanding
+- **Open Graph & Twitter Cards** for social media sharing
+- **Dynamic sitemap.xml** with proper priorities and change frequencies
+- **robots.txt** with crawl guidelines and sitemap reference
+- **Web app manifest** for PWA capabilities
+- **About page** with detailed feature descriptions and technical information
 
 ## 🚀 Getting Started
 
@@ -71,25 +91,53 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ### Online Interface
 
-1. **Basic Usage**: 
+1. **Endpoint Mode**: 
+   - Select "Endpoint URL" tab
    - Enter your GraphQL endpoint in the input field
+   - Add custom headers if needed (for private APIs)
    - Click "Generate Types" or use `Ctrl+Enter`
-   - Copy or download the generated TypeScript types
 
-2. **Advanced Configuration**:
+2. **Schema Definition Mode**:
+   - Select "Schema Definition" tab
+   - Paste or type your GraphQL schema directly
+   - Use the provided examples as templates
+   - Click "Generate Types" or use `Ctrl+Enter`
+
+3. **Advanced Configuration**:
    - Click "Output Formats" to access advanced options
    - Select multiple output formats (TypeScript, React Query, etc.)
    - Add GraphQL operations for client SDK generation
    - Configure custom headers for authentication
 
-3. **URL Parameter**: Pass the endpoint as a query parameter:
+4. **URL Parameter**: Pass the endpoint as a query parameter:
    ```
    https://graphql-codegen.vercel.app/?graphqlApiEndpoint=https://your-api.com/graphql
    ```
 
-4. **Keyboard Shortcuts**: Use `Ctrl+Enter` to generate, `Ctrl+D` to download, or `Ctrl+/` for help
+5. **Keyboard Shortcuts**: Use `Ctrl+Enter` to generate, `Ctrl+D` to download, or `Ctrl+/` for help
 
-### Example Endpoints
+### Example Usage
+
+#### **Schema Definition Example** (Click to copy)
+```graphql
+type Query {
+  user: User
+  posts: [Post!]!
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+}
+
+type Post {
+  id: ID!
+  title: String!
+  content: String!
+  author: User!
+}
+```
 
 #### **Public APIs** (No headers required)
 - **Star Wars API**: `https://swapi-graphql.netlify.app/.netlify/functions/index`
@@ -104,6 +152,13 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - **Hasura GraphQL**: `https://YOUR_HASURA_PROJECT.hasura.app/v1/graphql`
   - Header: `x-hasura-admin-secret: YOUR_ADMIN_SECRET`
 
+## 🔒 Privacy & Security
+
+- **Secure server-side processing** - All GraphQL introspection happens on our servers
+- **No data storage** - We don't store your schemas, endpoints, or generated code
+- **No tracking** - We don't track your usage or collect personal information
+- **Open source** - Full transparency with publicly available code
+
 ## 🏗️ Architecture
 
 This project uses cutting-edge web technologies:
@@ -113,6 +168,7 @@ This project uses cutting-edge web technologies:
 - **Tailwind CSS** with **shadcn/ui** for beautiful, accessible components
 - **TypeScript** for complete type safety throughout the application
 - **next-themes** for seamless dark/light mode switching
+- **GraphQL Tools** for schema parsing and introspection
 
 ## 🛠️ Tech Stack
 
@@ -124,6 +180,20 @@ This project uses cutting-edge web technologies:
 - [shadcn/ui](https://ui.shadcn.com/) - High-quality React components
 - [next-themes](https://github.com/pacocoursey/next-themes) - Theme management
 - [GraphQL Codegen](https://the-guild.dev/graphql/codegen) - Code generation
+- [GraphQL Tools](https://the-guild.dev/graphql/tools) - Schema utilities
+
+## 🎯 **Latest Features** ⭐
+
+### ✅ **Recently Completed**
+- ✅ **Schema Definition Input** - Direct schema paste/type functionality
+- ✅ **Dual Input Modes** - Toggle between endpoint URL and schema definition
+- ✅ **Comprehensive SEO** - Metadata, structured data, sitemap, robots.txt
+- ✅ **Interactive Copy Examples** - Hover-to-reveal copy buttons on all examples
+- ✅ **About Page** - Detailed information and feature descriptions
+- ✅ **Enhanced Privacy Messaging** - Accurate server-side processing claims
+- ✅ **Full-Height Output** - Textarea expands to use all available space
+- ✅ **UI Polish** - Removed redundant format display, improved layout
+- ✅ **Enhanced UX** - Better visual guidance and error handling
 
 ## 📝 Roadmap
 
@@ -164,6 +234,13 @@ This project uses cutting-edge web technologies:
 - ✅ **GraphQL Operations Support** - Client SDK generation with operation inputs
 - ✅ **Smart Format Dependencies** - Automatic plugin dependency resolution
 - ✅ **State Persistence** - Form data persists across browser sessions
+- ✅ **Schema Definition Input** - Direct schema paste functionality
+- ✅ **Dual Input Modes** - Endpoint URL and Schema Definition switching
+- ✅ **SEO Optimization** - Complete SEO package with metadata, structured data, sitemap
+- ✅ **Copyable Examples** - Interactive copy functionality for all code examples
+- ✅ **Enhanced About Page** - Comprehensive tool information and features
+- ✅ **Privacy & Security** - Accurate messaging about server-side processing
+- ✅ **UI/UX Polish** - Full-height output, improved layout, better visual hierarchy
 
 ## 🤝 Contributing
 
