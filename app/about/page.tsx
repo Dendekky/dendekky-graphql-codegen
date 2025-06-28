@@ -68,8 +68,8 @@ export default function AboutPage() {
               </CardHeader>
               <CardContent>
                 <p className='text-gray-600 dark:text-gray-300'>
-                  All processing happens in your browser. We never store your 
-                  GraphQL schemas or generated code on our servers.
+                  Secure server-side processing with no data retention. We never store your 
+                  GraphQL schemas, headers, or generated code on our servers.
                 </p>
               </CardContent>
             </Card>

@@ -780,13 +780,13 @@ function GraphQLCodegenContent() {
               </div>
             </div>
             
-            <div className='mt-6 p-4 bg-gradient-to-r from-gray-50 to-slate-50 dark:from-gray-900 dark:to-slate-900 rounded-lg border border-gray-200 dark:border-gray-700'>
-              <h4 className='font-semibold text-gray-800 dark:text-gray-200 mb-2'>💝 Free & Secure</h4>
-              <p className='text-sm text-gray-600 dark:text-gray-300'>
-                No registration required, client-side processing, and completely open-source. 
-                Your GraphQL schemas never leave your browser.
-              </p>
-            </div>
+                         <div className='mt-6 p-4 bg-gradient-to-r from-gray-50 to-slate-50 dark:from-gray-900 dark:to-slate-900 rounded-lg border border-gray-200 dark:border-gray-700'>
+               <h4 className='font-semibold text-gray-800 dark:text-gray-200 mb-2'>💝 Free & Secure</h4>
+               <p className='text-sm text-gray-600 dark:text-gray-300'>
+                 No registration required, secure server-side processing, and completely open-source. 
+                 We don't store your GraphQL schemas or generated code.
+               </p>
+             </div>
           </CardContent>
         </Card>
       </div>
