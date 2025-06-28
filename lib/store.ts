@@ -4,7 +4,9 @@ import { OUTPUT_FORMATS } from '@/components/output-format-selector'
 
 export interface CodegenState {
   // Core form state
+  inputMode: 'endpoint' | 'schema'
   endpoint: string
+  schemaDefinition: string
   headers: Record<string, string>
   outputFormats: string[]
   documents: string
@@ -29,7 +31,9 @@ export interface CodegenState {
 
 export interface CodegenActions {
   // Form actions
+  setInputMode: (mode: 'endpoint' | 'schema') => void
   setEndpoint: (endpoint: string) => void
+  setSchemaDefinition: (schema: string) => void
   setHeaders: (headers: Record<string, string>) => void
   setOutputFormats: (formats: string[]) => void
   setDocuments: (documents: string) => void
@@ -67,7 +71,9 @@ const getInitialEndpoint = () => {
 }
 
 const initialState: CodegenState = {
+  inputMode: 'endpoint',
   endpoint: getInitialEndpoint(),
+  schemaDefinition: '',
   headers: {},
   outputFormats: ['typescript'],
   documents: '',
@@ -88,7 +94,9 @@ export const useCodegenStore = create<CodegenStore>()(
       ...initialState,
       
       // Form actions
+      setInputMode: (inputMode) => set({ inputMode }, false, 'setInputMode'),
       setEndpoint: (endpoint) => set({ endpoint }, false, 'setEndpoint'),
+      setSchemaDefinition: (schemaDefinition) => set({ schemaDefinition }, false, 'setSchemaDefinition'),
       
       setHeaders: (headers) => set({ headers }, false, 'setHeaders'),
       
@@ -166,6 +174,8 @@ export const useCodegenStore = create<CodegenStore>()(
           ...initialState,
           // Preserve URL params endpoint if it exists
           endpoint: getInitialEndpoint() || '',
+          // Reset to endpoint mode when clearing
+          inputMode: 'endpoint',
         }, false, 'clearAll')
       },
       
@@ -192,7 +202,9 @@ export const useCodegenStore = create<CodegenStore>()(
       name: 'codegen-store',
       // Only store essential state in localStorage
       partialize: (state: CodegenStore) => ({
+        inputMode: state.inputMode,
         endpoint: state.endpoint,
+        schemaDefinition: state.schemaDefinition,
         headers: state.headers,
         outputFormats: state.outputFormats,
         documents: state.documents,
@@ -203,7 +215,9 @@ export const useCodegenStore = create<CodegenStore>()(
 
 // Selectors for commonly used combinations
 export const useFormState = () => useCodegenStore((state) => ({
+  inputMode: state.inputMode,
   endpoint: state.endpoint,
+  schemaDefinition: state.schemaDefinition,
   headers: state.headers,
   outputFormats: state.outputFormats,
   documents: state.documents,
@@ -235,7 +249,11 @@ export const useCanGenerate = () => useCodegenStore((state) => {
     OUTPUT_FORMATS.find(f => f.id === format)?.requiresDocuments
   )
   
-  return state.endpoint.trim() && 
+  const hasValidInput = state.inputMode === 'endpoint' 
+    ? state.endpoint.trim()
+    : state.schemaDefinition.trim()
+  
+  return hasValidInput && 
          state.outputFormats.length > 0 && 
          (!requiresDocuments || state.documents.trim())
 })

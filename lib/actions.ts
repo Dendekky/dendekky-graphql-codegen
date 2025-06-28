@@ -1,7 +1,7 @@
 'use server'
 
 import { codegen } from '@graphql-codegen/core'
-import { printSchema, parse, GraphQLSchema } from 'graphql'
+import { printSchema, parse, GraphQLSchema, buildClientSchema, getIntrospectionQuery, introspectionFromSchema, buildSchema } from 'graphql'
 import * as typescriptPlugin from '@graphql-codegen/typescript'
 import * as typescriptOperationsPlugin from '@graphql-codegen/typescript-operations'
 import * as typescriptResolversPlugin from '@graphql-codegen/typescript-resolvers'
@@ -19,7 +19,8 @@ const pluginMap = {
 }
 
 interface GenerateTypesRequest {
-  endpoint: string
+  endpoint?: string
+  schemaDefinition?: string
   headers?: Record<string, string>
   outputFormats: string[]
   documents?: string
@@ -118,37 +119,50 @@ const generateConfig = (
 }
 
 export async function generateTypes(
-  endpoint: string, 
+  endpointOrSchema: string, 
   headers?: Record<string, string>,
   outputFormats: string[] = ['typescript'],
   documents?: string,
-  signal?: AbortSignal
+  signal?: AbortSignal,
+  isSchemaDefinition?: boolean
 ) {
   try {
-    // Dynamic import to avoid SSR issues with GraphQL Tools
-    const { loadSchema } = await import('@graphql-tools/load')
-    const { UrlLoader } = await import('@graphql-tools/url-loader')
+    let schema: GraphQLSchema;
     
-    const fetchOptions: any = {}
-    
-    // Add custom headers if provided
-    if (headers && Object.keys(headers).length > 0) {
-      fetchOptions.headers = headers
+    if (isSchemaDefinition) {
+      // Handle direct schema definition
+      try {
+        schema = buildSchema(endpointOrSchema);
+      } catch (parseError) {
+        throw new Error(`Invalid GraphQL schema definition: ${parseError instanceof Error ? parseError.message : 'Unknown parsing error'}`);
+      }
+    } else {
+      // Handle URL endpoint (existing logic)
+      const { loadSchema } = await import('@graphql-tools/load')
+      const { UrlLoader } = await import('@graphql-tools/url-loader')
+      
+      const fetchOptions: any = {}
+      
+      // Add custom headers if provided
+      if (headers && Object.keys(headers).length > 0) {
+        fetchOptions.headers = headers
+      }
+      
+      // Add abort signal if provided
+      if (signal) {
+        fetchOptions.signal = signal
+      }
+      
+      const schemaOptions = {
+        loaders: [new UrlLoader()],
+        ...(Object.keys(fetchOptions).length > 0 && {
+          fetchOptions
+        })
+      }
+      
+      schema = await loadSchema(endpointOrSchema, schemaOptions)
     }
     
-    // Add abort signal if provided
-    if (signal) {
-      fetchOptions.signal = signal
-    }
-    
-    const schemaOptions = {
-      loaders: [new UrlLoader()],
-      ...(Object.keys(fetchOptions).length > 0 && {
-        fetchOptions
-      })
-    }
-    
-    const schema = await loadSchema(endpoint, schemaOptions)
     const config = generateConfig(schema, outputFormats, documents)
     const output = await codegen(config)
     

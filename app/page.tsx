@@ -31,6 +31,8 @@ import {
 import { HeadersInput } from '@/components/headers-input';
 import { OutputFormatModal } from '@/components/output-format-modal';
 import { OUTPUT_FORMATS } from '@/components/output-format-selector';
+import { InputModeToggle } from '@/components/input-mode-toggle';
+import { SchemaInput } from '@/components/schema-input';
 import {
   useCodegenStore,
   useRequiresDocuments,
@@ -44,8 +46,12 @@ function GraphQLCodegenContent() {
 
   // Zustand store hooks
   const {
+    inputMode,
+    setInputMode,
     endpoint,
     setEndpoint,
+    schemaDefinition,
+    setSchemaDefinition,
     headers,
     setHeaders,
     outputFormats,
@@ -82,8 +88,12 @@ function GraphQLCodegenContent() {
     e?.preventDefault();
 
     if (!canGenerate) {
-      if (!endpoint.trim()) {
+      if (inputMode === 'endpoint' && !endpoint.trim()) {
         setError('Please enter a GraphQL endpoint');
+        return;
+      }
+      if (inputMode === 'schema' && !schemaDefinition.trim()) {
+        setError('Please enter a GraphQL schema definition');
         return;
       }
       if (requiresDocuments && !documents.trim()) {
@@ -110,11 +120,12 @@ function GraphQLCodegenContent() {
 
     try {
       const response = await generateTypes(
-        endpoint.trim(),
+        inputMode === 'endpoint' ? endpoint.trim() : schemaDefinition.trim(),
         headers,
         outputFormats,
         documents,
-        controller.signal
+        controller.signal,
+        inputMode === 'schema'
       );
 
       // Don't process if request was cancelled
@@ -389,29 +400,46 @@ function GraphQLCodegenContent() {
                 </div>
                 <div>
                   <CardTitle className='text-2xl font-bold'>
-                    GraphQL Endpoint
+                    {inputMode === 'endpoint'
+                      ? 'GraphQL Endpoint'
+                      : 'GraphQL Schema'}
                   </CardTitle>
                   <CardDescription className='text-base mt-1'>
-                    Enter a GraphQL API endpoint to generate TypeScript types
+                    {inputMode === 'endpoint'
+                      ? 'Enter a GraphQL API endpoint to generate TypeScript types'
+                      : 'Paste your GraphQL schema definition to generate TypeScript types'}
                   </CardDescription>
                 </div>
               </div>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className='space-y-6'>
-                <div className='relative'>
-                  <Input
-                    type='url'
-                    placeholder='https://swapi-graphql.netlify.app/.netlify/functions/index'
-                    value={endpoint}
-                    onChange={(e) => setEndpoint(e.target.value)}
-                    required
-                    className='h-12 text-base border-2 border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 rounded-xl shadow-sm transition-all duration-200'
-                  />
-                </div>
+                {/* Input Mode Toggle */}
+                <InputModeToggle mode={inputMode} onChange={setInputMode} />
 
-                {/* Headers Input */}
-                <HeadersInput headers={headers} onChange={setHeaders} />
+                {/* Dynamic Input Based on Mode */}
+                {inputMode === 'endpoint' ? (
+                  <div className='relative'>
+                    <Input
+                      type='url'
+                      placeholder='https://swapi-graphql.netlify.app/.netlify/functions/index'
+                      value={endpoint}
+                      onChange={(e) => setEndpoint(e.target.value)}
+                      required
+                      className='h-12 text-base border-2 border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 rounded-xl shadow-sm transition-all duration-200'
+                    />
+                  </div>
+                ) : (
+                  <SchemaInput
+                    value={schemaDefinition}
+                    onChange={setSchemaDefinition}
+                  />
+                )}
+
+                {/* Headers Input - Only show for endpoint mode */}
+                {inputMode === 'endpoint' && (
+                  <HeadersInput headers={headers} onChange={setHeaders} />
+                )}
 
                 {/* Output Format Modal */}
                 <div className='flex items-center justify-between'>
@@ -690,7 +718,7 @@ function GraphQLCodegenContent() {
             </div>
           </CardHeader>
           <CardContent className='space-y-6'>
-            <div className='grid md:grid-cols-2 gap-6'>
+            <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
               <div className='p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/50 dark:to-indigo-950/50 rounded-xl border border-blue-200 dark:border-blue-800'>
                 <h3 className='font-bold text-lg mb-3 text-blue-800 dark:text-blue-200'>
                   Using URL Parameters
@@ -700,9 +728,29 @@ function GraphQLCodegenContent() {
                 </p>
                 <code className='block p-3 bg-blue-100 dark:bg-blue-900/50 rounded-lg text-sm font-mono border border-blue-200 dark:border-blue-700'>
                   {typeof window !== 'undefined' && window.location.origin}
-                  /?graphqlApiEndpoint=https://your-api.com/graphql
+                  /?graphqlApiEndpoint=https://spacex-production.up.railway.app/
                 </code>
               </div>
+
+              <div className='p-4 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/50 dark:to-pink-950/50 rounded-xl border border-purple-200 dark:border-purple-800'>
+                <h3 className='font-bold text-lg mb-3 text-purple-800 dark:text-purple-200'>
+                  Schema Definition Mode
+                </h3>
+                <p className='text-sm text-purple-700 dark:text-purple-300 mb-3'>
+                  Paste GraphQL schema definitions directly:
+                </p>
+                <code className='block p-3 bg-purple-100 dark:bg-purple-900/50 rounded-lg text-sm font-mono border border-purple-200 dark:border-purple-700'>
+                  {`type Query {
+  user: User
+}
+
+type User {
+  id: ID!
+  name: String!
+}`}
+                </code>
+              </div>
+
               <div className='p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/50 dark:to-emerald-950/50 rounded-xl border border-green-200 dark:border-green-800'>
                 <h3 className='font-bold text-lg mb-3 text-green-800 dark:text-green-200'>
                   Example Endpoints
@@ -750,43 +798,68 @@ function GraphQLCodegenContent() {
           </CardHeader>
           <CardContent className='prose prose-lg max-w-none dark:prose-invert'>
             <p className='text-gray-600 dark:text-gray-300 mb-6'>
-              Transform your GraphQL schemas into TypeScript types instantly with our free online GraphQL Codegen tool. 
-              No installation required - just paste your GraphQL endpoint and generate production-ready TypeScript types, 
-              React Query hooks, GraphQL Request SDKs, and more.
+              Transform your GraphQL schemas into TypeScript types instantly
+              with our free online GraphQL Codegen tool. No installation
+              required - just paste your GraphQL endpoint and generate
+              production-ready TypeScript types, React Query hooks, GraphQL
+              Request SDKs, and more.
             </p>
-            
+
             <h3 className='text-xl font-semibold mb-4 text-gray-900 dark:text-white'>
               🚀 Key Features & Benefits:
             </h3>
             <div className='grid md:grid-cols-2 gap-4 not-prose'>
               <div className='p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/50 dark:to-indigo-950/50 rounded-lg border border-blue-200 dark:border-blue-800'>
-                <h4 className='font-semibold text-blue-800 dark:text-blue-200 mb-2'>Multiple Output Formats</h4>
-                <p className='text-sm text-blue-700 dark:text-blue-300'>TypeScript types, React Query hooks, GraphQL Request SDK, Typed Document Nodes, and more.</p>
+                <h4 className='font-semibold text-blue-800 dark:text-blue-200 mb-2'>
+                  Multiple Output Formats
+                </h4>
+                <p className='text-sm text-blue-700 dark:text-blue-300'>
+                  TypeScript types, React Query hooks, GraphQL Request SDK,
+                  Typed Document Nodes, and more.
+                </p>
               </div>
-              
+
               <div className='p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/50 dark:to-emerald-950/50 rounded-lg border border-green-200 dark:border-green-800'>
-                <h4 className='font-semibold text-green-800 dark:text-green-200 mb-2'>Custom Headers Support</h4>
-                <p className='text-sm text-green-700 dark:text-green-300'>Work with authenticated APIs using Bearer tokens, API keys, and custom headers.</p>
+                <h4 className='font-semibold text-green-800 dark:text-green-200 mb-2'>
+                  Custom Headers Support
+                </h4>
+                <p className='text-sm text-green-700 dark:text-green-300'>
+                  Work with authenticated APIs using Bearer tokens, API keys,
+                  and custom headers.
+                </p>
               </div>
-              
+
               <div className='p-4 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/50 dark:to-pink-950/50 rounded-lg border border-purple-200 dark:border-purple-800'>
-                <h4 className='font-semibold text-purple-800 dark:text-purple-200 mb-2'>Real-time Generation</h4>
-                <p className='text-sm text-purple-700 dark:text-purple-300'>Instant code generation with performance metrics and file size tracking.</p>
+                <h4 className='font-semibold text-purple-800 dark:text-purple-200 mb-2'>
+                  Real-time Generation
+                </h4>
+                <p className='text-sm text-purple-700 dark:text-purple-300'>
+                  Instant code generation with performance metrics and file size
+                  tracking.
+                </p>
               </div>
-              
+
               <div className='p-4 bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-950/50 dark:to-red-950/50 rounded-lg border border-orange-200 dark:border-orange-800'>
-                <h4 className='font-semibold text-orange-800 dark:text-orange-200 mb-2'>Developer-Friendly</h4>
-                <p className='text-sm text-orange-700 dark:text-orange-300'>Copy to clipboard, download files, keyboard shortcuts, and dark mode support.</p>
+                <h4 className='font-semibold text-orange-800 dark:text-orange-200 mb-2'>
+                  Developer-Friendly
+                </h4>
+                <p className='text-sm text-orange-700 dark:text-orange-300'>
+                  Copy to clipboard, download files, keyboard shortcuts, and
+                  dark mode support.
+                </p>
               </div>
             </div>
-            
-                         <div className='mt-6 p-4 bg-gradient-to-r from-gray-50 to-slate-50 dark:from-gray-900 dark:to-slate-900 rounded-lg border border-gray-200 dark:border-gray-700'>
-               <h4 className='font-semibold text-gray-800 dark:text-gray-200 mb-2'>💝 Free & Secure</h4>
-               <p className='text-sm text-gray-600 dark:text-gray-300'>
-                 No registration required, secure server-side processing, and completely open-source. 
-                 We don&apos;t store your GraphQL schemas or generated code.
-               </p>
-             </div>
+
+            <div className='mt-6 p-4 bg-gradient-to-r from-gray-50 to-slate-50 dark:from-gray-900 dark:to-slate-900 rounded-lg border border-gray-200 dark:border-gray-700'>
+              <h4 className='font-semibold text-gray-800 dark:text-gray-200 mb-2'>
+                💝 Free & Secure
+              </h4>
+              <p className='text-sm text-gray-600 dark:text-gray-300'>
+                No registration required, secure server-side processing, and
+                completely open-source. We don&apos;t store your GraphQL schemas
+                or generated code.
+              </p>
+            </div>
           </CardContent>
         </Card>
       </div>
