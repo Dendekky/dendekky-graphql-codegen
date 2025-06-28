@@ -784,7 +784,7 @@ function GraphQLCodegenContent() {
                <h4 className='font-semibold text-gray-800 dark:text-gray-200 mb-2'>💝 Free & Secure</h4>
                <p className='text-sm text-gray-600 dark:text-gray-300'>
                  No registration required, secure server-side processing, and completely open-source. 
-                 We don't store your GraphQL schemas or generated code.
+                 We don&apos;t store your GraphQL schemas or generated code.
                </p>
              </div>
           </CardContent>
