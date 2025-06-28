@@ -2,6 +2,13 @@ import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { OUTPUT_FORMATS } from '@/components/output-format-selector'
 
+export interface SchemaValidationError {
+  message: string
+  line?: number
+  column?: number
+  location?: string
+}
+
 export interface CodegenState {
   // Core form state
   inputMode: 'endpoint' | 'schema'
@@ -10,6 +17,13 @@ export interface CodegenState {
   headers: Record<string, string>
   outputFormats: string[]
   documents: string
+  
+  // Schema validation state
+  schemaValidation: {
+    isValid: boolean
+    errors: SchemaValidationError[]
+    isValidating: boolean
+  }
   
   // Result state
   result: string
@@ -37,6 +51,10 @@ export interface CodegenActions {
   setHeaders: (headers: Record<string, string>) => void
   setOutputFormats: (formats: string[]) => void
   setDocuments: (documents: string) => void
+  
+  // Schema validation actions
+  setSchemaValidation: (validation: { isValid: boolean; errors: SchemaValidationError[]; isValidating: boolean }) => void
+  setSchemaValidating: (isValidating: boolean) => void
   
   // Result actions
   setResult: (result: string) => void
@@ -77,6 +95,11 @@ const initialState: CodegenState = {
   headers: {},
   outputFormats: ['typescript'],
   documents: '',
+  schemaValidation: {
+    isValid: true,
+    errors: [],
+    isValidating: false,
+  },
   result: '',
   error: '',
   loading: false,
@@ -143,6 +166,12 @@ export const useCodegenStore = create<CodegenStore>()(
       },
       
       setDocuments: (documents) => set({ documents }, false, 'setDocuments'),
+      
+      // Schema validation actions
+      setSchemaValidation: (schemaValidation) => set({ schemaValidation }, false, 'setSchemaValidation'),
+      setSchemaValidating: (isValidating) => set((state) => ({
+        schemaValidation: { ...state.schemaValidation, isValidating }
+      }), false, 'setSchemaValidating'),
       
       // Result actions
       setResult: (result) => set({ result }, false, 'setResult'),
@@ -237,6 +266,12 @@ export const useUIState = () => useCodegenStore((state) => ({
   showShortcuts: state.showShortcuts,
 }))
 
+export const useSchemaValidation = () => useCodegenStore((state) => ({
+  schemaValidation: state.schemaValidation,
+  setSchemaValidation: state.setSchemaValidation,
+  setSchemaValidating: state.setSchemaValidating,
+}))
+
 // Computed selectors
 export const useRequiresDocuments = () => useCodegenStore((state) => 
   state.outputFormats.some(format => 
@@ -252,10 +287,15 @@ export const useCanGenerate = () => useCodegenStore((state) => {
   const hasValidInput = state.inputMode === 'endpoint' 
     ? state.endpoint.trim()
     : state.schemaDefinition.trim()
+
+  // For schema mode, also check if schema is valid and not currently validating
+  const isSchemaInputValid = state.inputMode === 'endpoint' || 
+    (state.schemaValidation.isValid && !state.schemaValidation.isValidating)
   
   return hasValidInput && 
          state.outputFormats.length > 0 && 
-         (!requiresDocuments || state.documents.trim())
+         (!requiresDocuments || state.documents.trim()) &&
+         isSchemaInputValid
 })
 
 export const useIsBasicTypescript = () => useCodegenStore((state) => 

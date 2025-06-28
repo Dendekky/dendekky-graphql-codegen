@@ -18,8 +18,18 @@ This is a modern [GraphQL Codegen](https://the-guild.dev/graphql/codegen) web wr
 - **GraphQL Endpoint Mode** - Connect to live GraphQL APIs with custom headers
 - **Schema Definition Mode** - Paste GraphQL schema definitions directly
 - **Seamless switching** between input modes with preserved state
+- **Real-time schema validation** with error highlighting and helpful messages
 - **Visual guidance** and format hints for schema definitions
 - **Line count display** for schema definition input
+
+### 🔍 **Schema Validation**
+- **Real-time validation** with debounced input (300ms) for smooth typing
+- **GraphQL spec compliance** using official GraphQL parser
+- **Visual error highlighting** with dynamic border colors and status icons
+- **Helpful error messages** with line/column information and suggestions
+- **Validation state indicators** - loading, valid, error states with appropriate badges
+- **Form integration** - prevents generation with invalid schemas
+- **User-friendly error descriptions** with improvement suggestions for common mistakes
 
 ### ⚡ **Developer Experience**
 - **Next.js 15** with App Router for optimal performance
@@ -100,8 +110,10 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 2. **Schema Definition Mode**:
    - Select "Schema Definition" tab
    - Paste or type your GraphQL schema directly
+   - **Real-time validation** provides instant feedback on schema correctness
+   - Visual indicators show validation status (valid/error/validating)
    - Use the provided examples as templates
-   - Click "Generate Types" or use `Ctrl+Enter`
+   - Click "Generate Types" or use `Ctrl+Enter` (disabled until schema is valid)
 
 3. **Advanced Configuration**:
    - Click "Output Formats" to access advanced options
@@ -168,7 +180,7 @@ This project uses cutting-edge web technologies:
 - **Tailwind CSS** with **shadcn/ui** for beautiful, accessible components
 - **TypeScript** for complete type safety throughout the application
 - **next-themes** for seamless dark/light mode switching
-- **GraphQL Tools** for schema parsing and introspection
+- **GraphQL Tools** for schema parsing, introspection, and validation
 
 ## 🛠️ Tech Stack
 
@@ -185,6 +197,7 @@ This project uses cutting-edge web technologies:
 ## 🎯 **Latest Features** ⭐
 
 ### ✅ **Recently Completed**
+- ✅ **Real-time Schema Validation** - Live validation with error highlighting and helpful messages
 - ✅ **Schema Definition Input** - Direct schema paste/type functionality
 - ✅ **Dual Input Modes** - Toggle between endpoint URL and schema definition
 - ✅ **Comprehensive SEO** - Metadata, structured data, sitemap, robots.txt
@@ -199,9 +212,9 @@ This project uses cutting-edge web technologies:
 
 ### 🎯 **Next Priority Features**
 - [ ] **Schema Introspection Visualization** - Interactive schema explorer
-- [ ] **Schema Validation** - Real-time error highlighting and suggestions
 - [ ] **Configuration Presets** - Save and reuse common configurations
 - [ ] **Auto-generation from URLs** - Automatically generate when URL contains endpoint
+- [ ] **Schema Suggestions** - Auto-complete and intelligent schema suggestions
 
 ### 🔧 **Enhanced Developer Experience**
 - [ ] **Schema Diff Comparison** - Compare schemas between versions
@@ -235,6 +248,7 @@ This project uses cutting-edge web technologies:
 - ✅ **Smart Format Dependencies** - Automatic plugin dependency resolution
 - ✅ **State Persistence** - Form data persists across browser sessions
 - ✅ **Schema Definition Input** - Direct schema paste functionality
+- ✅ **Real-time Schema Validation** - Live validation with GraphQL spec compliance and helpful error messages
 - ✅ **Dual Input Modes** - Endpoint URL and Schema Definition switching
 - ✅ **SEO Optimization** - Complete SEO package with metadata, structured data, sitemap
 - ✅ **Copyable Examples** - Interactive copy functionality for all code examples
