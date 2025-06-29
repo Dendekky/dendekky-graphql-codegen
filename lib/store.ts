@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { OUTPUT_FORMATS } from '@/components/output-format-selector'
+import { ParsedSchema } from './schema-parser'
 
 export interface SchemaValidationError {
   message: string
@@ -24,6 +25,11 @@ export interface CodegenState {
     errors: SchemaValidationError[]
     isValidating: boolean
   }
+  
+  // Schema introspection state
+  parsedSchema: ParsedSchema | null
+  schemaParsingError: string | null
+  showSchemaVisualizer: boolean
   
   // Result state
   result: string
@@ -55,6 +61,11 @@ export interface CodegenActions {
   // Schema validation actions
   setSchemaValidation: (validation: { isValid: boolean; errors: SchemaValidationError[]; isValidating: boolean }) => void
   setSchemaValidating: (isValidating: boolean) => void
+  
+  // Schema parsing actions
+  setParsedSchema: (schema: ParsedSchema | null) => void
+  setSchemaParsingError: (error: string | null) => void
+  setShowSchemaVisualizer: (show: boolean) => void
   
   // Result actions
   setResult: (result: string) => void
@@ -100,6 +111,9 @@ const initialState: CodegenState = {
     errors: [],
     isValidating: false,
   },
+  parsedSchema: null,
+  schemaParsingError: null,
+  showSchemaVisualizer: false,
   result: '',
   error: '',
   loading: false,
@@ -173,6 +187,11 @@ export const useCodegenStore = create<CodegenStore>()(
         schemaValidation: { ...state.schemaValidation, isValidating }
       }), false, 'setSchemaValidating'),
       
+      // Schema parsing actions
+      setParsedSchema: (parsedSchema) => set({ parsedSchema }, false, 'setParsedSchema'),
+      setSchemaParsingError: (schemaParsingError) => set({ schemaParsingError }, false, 'setSchemaParsingError'),
+      setShowSchemaVisualizer: (showSchemaVisualizer) => set({ showSchemaVisualizer }, false, 'setShowSchemaVisualizer'),
+      
       // Result actions
       setResult: (result) => set({ result }, false, 'setResult'),
       setError: (error) => set({ error }, false, 'setError'),
@@ -205,6 +224,8 @@ export const useCodegenStore = create<CodegenStore>()(
           endpoint: getInitialEndpoint() || '',
           // Reset to endpoint mode when clearing
           inputMode: 'endpoint',
+          // Reset schema visualizer to off
+          showSchemaVisualizer: false,
         }, false, 'clearAll')
       },
       
@@ -237,6 +258,7 @@ export const useCodegenStore = create<CodegenStore>()(
         headers: state.headers,
         outputFormats: state.outputFormats,
         documents: state.documents,
+        showSchemaVisualizer: state.showSchemaVisualizer,
       }),
     }
   )
@@ -271,6 +293,14 @@ export const useSchemaValidation = () => useCodegenStore((state) => ({
   setSchemaValidation: state.setSchemaValidation,
   setSchemaValidating: state.setSchemaValidating,
 }))
+
+// Individual selectors to avoid object creation on every render
+export const useParsedSchema = () => useCodegenStore((state) => state.parsedSchema)
+export const useSchemaParsingError = () => useCodegenStore((state) => state.schemaParsingError)
+export const useSetParsedSchema = () => useCodegenStore((state) => state.setParsedSchema)
+export const useSetSchemaParsingError = () => useCodegenStore((state) => state.setSchemaParsingError)
+export const useShowSchemaVisualizer = () => useCodegenStore((state) => state.showSchemaVisualizer)
+export const useSetShowSchemaVisualizer = () => useCodegenStore((state) => state.setShowSchemaVisualizer)
 
 // Computed selectors
 export const useRequiresDocuments = () => useCodegenStore((state) => 
