@@ -8,7 +8,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'GraphQL Codegen Online - Generate TypeScript Types from GraphQL Schemas',
+  title: 'GraphQL Type Generator - Generate TypeScript Types from GraphQL Schemas',
   description: 'Free online GraphQL code generator tool. Generate TypeScript types, React Query hooks, GraphQL Request SDK, and more from your GraphQL schemas instantly. No installation required.',
   metadataBase: new URL('https://graphqlcodegen.com'),
   keywords: [
@@ -28,8 +28,8 @@ export const metadata: Metadata = {
     'Online Generator'
   ],
   authors: [{ name: 'Ibrahim Adeniyi' }],
-  creator: 'GraphQL Codegen Online',
-  publisher: 'GraphQL Codegen Online',
+  creator: 'GraphQL Type Generator',
+  publisher: 'GraphQL Type Generator',
   category: 'Developer Tools',
   robots: {
     index: true,
@@ -52,16 +52,16 @@ export const metadata: Metadata = {
   },
   manifest: '/manifest.json',
   openGraph: {
-    title: 'GraphQL Codegen Online - Generate TypeScript Types from GraphQL Schemas',
+    title: 'GraphQL Type Generator - Generate TypeScript Types from GraphQL Schemas',
     description: 'Free online GraphQL code generator tool. Generate TypeScript types, React Query hooks, GraphQL Request SDK, and more from your GraphQL schemas instantly. No installation required.',
     url: 'https://graphqlcodegen.com',
-    siteName: 'GraphQL Codegen Online',
+    siteName: 'GraphQL Type Generator',
     images: [
       {
         url: '/codegen.png',
         width: 1200,
         height: 630,
-        alt: 'GraphQL Codegen Online - Free GraphQL Code Generator Tool',
+        alt: 'GraphQL Type Generator - Free GraphQL Code Generator Tool',
       },
     ],
     locale: 'en_US',
@@ -69,7 +69,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'GraphQL Codegen Online - Generate TypeScript Types from GraphQL Schemas',
+    title: 'GraphQL Type Generator - Generate TypeScript Types from GraphQL Schemas',
     description: 'Free online GraphQL code generator tool. Generate TypeScript types, React Query hooks, GraphQL Request SDK, and more from your GraphQL schemas instantly.',
     images: ['/codegen.png'],
     creator: '@dendekky',
@@ -88,7 +88,7 @@ export default function RootLayout({
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
-    name: 'GraphQL Codegen Online',
+    name: 'GraphQL Type Generator',
     description: 'Free online GraphQL code generator tool. Generate TypeScript types, React Query hooks, GraphQL Request SDK, and more from your GraphQL schemas instantly.',
     url: 'https://graphqlcodegen.com',
     applicationCategory: 'DeveloperApplication',
@@ -100,7 +100,7 @@ export default function RootLayout({
     },
     creator: {
       '@type': 'Organization',
-      name: 'GraphQL Codegen Online',
+      name: 'GraphQL Type Generator',
     },
     keywords: 'GraphQL, CodeGen, TypeScript, Code Generator, GraphQL Types, React Query, Developer Tools',
     inLanguage: 'English',

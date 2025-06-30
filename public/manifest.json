@@ -1,6 +1,6 @@
 {
-  "name": "GraphQL Codegen Online",
-  "short_name": "GraphQL Codegen",
+  "name": "GraphQL Type Generator",
+  "short_name": "GraphQL Type Generator",
   "description": "Free online GraphQL code generator tool. Generate TypeScript types, React Query hooks, and more from your GraphQL schemas instantly.",
   "start_url": "/",
   "display": "standalone",

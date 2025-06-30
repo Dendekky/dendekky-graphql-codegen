@@ -409,7 +409,7 @@ function GraphQLCodegenContent() {
               </div>
               <div>
                 <h1 className='text-5xl font-black tracking-tight bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 dark:from-white dark:via-blue-200 dark:to-purple-200 bg-clip-text text-transparent'>
-                  GraphQL Codegen Online
+                  GraphQL Type Generator
                 </h1>
               </div>
             </div>
@@ -877,14 +877,14 @@ type Post {
                 <Code2 className='h-5 w-5 text-white' />
               </div>
               <CardTitle className='text-2xl font-bold'>
-                Why Use GraphQL Codegen Online?
+                Why Use GraphQL Type Generator?
               </CardTitle>
             </div>
           </CardHeader>
           <CardContent className='prose prose-lg max-w-none dark:prose-invert'>
             <p className='text-gray-600 dark:text-gray-300 mb-6'>
               Transform your GraphQL schemas into TypeScript types instantly
-              with our free online GraphQL Codegen tool. No installation
+              with our free online GraphQL Type Generator tool. No installation
               required - just paste your GraphQL endpoint and generate
               production-ready TypeScript types, React Query hooks, GraphQL
               Request SDKs, and more.

@@ -4,11 +4,11 @@ import { Code2, Zap, Shield, Users, Globe, Heart } from 'lucide-react';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'About - GraphQL Codegen Online | Free GraphQL Code Generator',
-  description: 'Learn about GraphQL Codegen Online, the free tool for generating TypeScript types from GraphQL schemas. Discover our mission, features, and commitment to the developer community.',
+  title: 'About - GraphQL Type Generator | Free GraphQL Code Generator',
+  description: 'Learn about GraphQL Type Generator, the free tool for generating TypeScript types from GraphQL schemas. Discover our mission, features, and commitment to the developer community.',
   openGraph: {
-    title: 'About - GraphQL Codegen Online',
-    description: 'Learn about GraphQL Codegen Online, the free tool for generating TypeScript types from GraphQL schemas.',
+    title: 'About - GraphQL Type Generator',
+    description: 'Learn about GraphQL Type Generator, the free tool for generating TypeScript types from GraphQL schemas.',
     url: 'https://graphqlcodegen.com/about',
   },
 };
@@ -19,7 +19,7 @@ export default function AboutPage() {
       <div className='relative container mx-auto p-6 max-w-4xl'>
         <div className='mb-12'>
           <h1 className='text-4xl font-bold mb-4 text-gray-900 dark:text-white'>
-            About GraphQL Codegen Online
+            About GraphQL Type Generator
           </h1>
           <p className='text-xl text-gray-600 dark:text-gray-300'>
             A free, open-source tool for the GraphQL developer community
@@ -36,7 +36,7 @@ export default function AboutPage() {
             </CardHeader>
             <CardContent className='prose prose-lg max-w-none dark:prose-invert'>
               <p>
-                GraphQL Codegen Online was created to simplify the GraphQL development experience. 
+                GraphQL Type Generator was created to simplify the GraphQL development experience. 
                 We believe that generating TypeScript types from GraphQL schemas should be accessible, 
                 fast, and free for every developer, regardless of their project size or budget.
               </p>
@@ -141,7 +141,7 @@ export default function AboutPage() {
               className='inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200'
             >
               <Code2 className='h-5 w-5' />
-              Try GraphQL Codegen Online
+              Try GraphQL Type Generator
             </Link>
           </div>
         </div>

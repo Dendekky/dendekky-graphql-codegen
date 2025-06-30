@@ -1,6 +1,6 @@
-# GraphQL Codegen Online
+# GraphQL Type Generator
 
-This is a modern [GraphQL Codegen](https://the-guild.dev/graphql/codegen) web wrapper built with Next.js 15, featuring a stunning glassmorphism UI and comprehensive developer experience. This project eliminates the need for an extra codegen step in your development process.
+This is a modern [GraphQL Type Generator](https://the-guild.dev/graphql/codegen) web wrapper built with Next.js 15, featuring a stunning glassmorphism UI and comprehensive developer experience. This project eliminates the need for an extra codegen step in your development process.
 
 ## ✨ Features
 
@@ -83,7 +83,7 @@ This is a modern [GraphQL Codegen](https://the-guild.dev/graphql/codegen) web wr
 
 ## 🚀 Getting Started
 
-You can find the deployed page on [GraphQL Codegen Online](https://graphql-codegen.vercel.app/).
+You can find the deployed page on [GraphQL Type Generator](https://graphql-codegen.vercel.app/).
 
 To run locally:
 
