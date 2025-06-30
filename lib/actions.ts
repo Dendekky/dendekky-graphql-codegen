@@ -124,18 +124,26 @@ export async function generateTypes(
   outputFormats: string[] = ['typescript'],
   documents?: string,
   signal?: AbortSignal,
-  isSchemaDefinition?: boolean
+  isSchemaDefinition?: boolean,
+  includeIntrospection?: boolean
 ) {
   try {
     let schema: GraphQLSchema;
+    let introspectionResult = null;
     
-    if (isSchemaDefinition) {
-      // Handle direct schema definition
-      try {
-        schema = buildSchema(endpointOrSchema);
-      } catch (parseError) {
-        throw new Error(`Invalid GraphQL schema definition: ${parseError instanceof Error ? parseError.message : 'Unknown parsing error'}`);
-      }
+          if (isSchemaDefinition) {
+        // Handle direct schema definition
+        try {
+          schema = buildSchema(endpointOrSchema);
+          // Get introspection from the built schema for visualization (if requested)
+          if (includeIntrospection) {
+            const rawIntrospection = introspectionFromSchema(schema);
+            // Serialize to plain object for client transfer
+            introspectionResult = JSON.parse(JSON.stringify(rawIntrospection));
+          }
+        } catch (parseError) {
+          throw new Error(`Invalid GraphQL schema definition: ${parseError instanceof Error ? parseError.message : 'Unknown parsing error'}`);
+        }
     } else {
       // Handle URL endpoint (existing logic)
       const { loadSchema } = await import('@graphql-tools/load')
@@ -161,6 +169,18 @@ export async function generateTypes(
       }
       
       schema = await loadSchema(endpointOrSchema, schemaOptions)
+      
+      // Get introspection result for visualization (if requested)
+      if (includeIntrospection) {
+        try {
+          const rawIntrospection = introspectionFromSchema(schema);
+          // Serialize to plain object for client transfer
+          introspectionResult = JSON.parse(JSON.stringify(rawIntrospection));
+        } catch (introspectionError) {
+          console.warn('Failed to get introspection for visualization:', introspectionError);
+          // Continue without introspection - don't fail the whole operation
+        }
+      }
     }
     
     const config = generateConfig(schema, outputFormats, documents)
@@ -169,6 +189,7 @@ export async function generateTypes(
     return { 
       success: true, 
       data: output,
+      introspection: introspectionResult,
       formatInfo: {
         selectedFormats: outputFormats,
         plugins: config.plugins.map(p => Object.keys(p)[0]),

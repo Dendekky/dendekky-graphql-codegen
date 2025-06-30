@@ -14,28 +14,33 @@ import {
 } from '@/components/ui/dialog'
 import { OutputFormatSelector, OUTPUT_FORMATS } from '@/components/output-format-selector'
 import { DocumentsInput } from '@/components/documents-input'
-import { useCodegenStore, useIsBasicTypescript } from '@/lib/store'
-import { Settings, Code2, Zap, FileText } from 'lucide-react'
+import { useCodegenStore, useIsBasicTypescript, useShowSchemaVisualizer, useSetShowSchemaVisualizer } from '@/lib/store'
+import { Settings, Code2, Zap, FileText, Eye } from 'lucide-react'
 
 export function OutputFormatModal() {
   const [isOpen, setIsOpen] = useState(false)
   const [tempFormats, setTempFormats] = useState<string[]>([])
   const [tempDocuments, setTempDocuments] = useState<string>('')
+  const [tempShowSchemaVisualizer, setTempShowSchemaVisualizer] = useState<boolean>(false)
 
   // Zustand store hooks
   const { outputFormats, documents, setOutputFormats, setDocuments } = useCodegenStore()
   const isBasicTypescript = useIsBasicTypescript()
+  const showSchemaVisualizer = useShowSchemaVisualizer()
+  const setShowSchemaVisualizer = useSetShowSchemaVisualizer()
 
   const handleOpen = () => {
     // Reset temp state to current values when opening
     setTempFormats(outputFormats)
     setTempDocuments(documents)
+    setTempShowSchemaVisualizer(showSchemaVisualizer)
     setIsOpen(true)
   }
 
   const handleSave = () => {
     setOutputFormats(tempFormats)
     setDocuments(tempDocuments)
+    setShowSchemaVisualizer(tempShowSchemaVisualizer)
     setIsOpen(false)
   }
 
@@ -43,6 +48,7 @@ export function OutputFormatModal() {
     // Reset temp state to original values
     setTempFormats(outputFormats)
     setTempDocuments(documents)
+    setTempShowSchemaVisualizer(showSchemaVisualizer)
     setIsOpen(false)
   }
 
@@ -131,6 +137,30 @@ export function OutputFormatModal() {
             selectedFormats={tempFormats} 
             onChange={setTempFormats} 
           />
+
+          {/* Schema Visualizer Toggle */}
+          <div className="p-4 bg-purple-500/10 border border-purple-500/20 rounded-xl">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Eye className="h-5 w-5 text-purple-400" />
+                <div>
+                  <h4 className="font-semibold text-purple-300">Schema Visualizer</h4>
+                  <p className="text-sm text-purple-400/80">
+                    Show an interactive visualization of your GraphQL schema structure
+                  </p>
+                </div>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={tempShowSchemaVisualizer}
+                  onChange={(e) => setTempShowSchemaVisualizer(e.target.checked)}
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
+              </label>
+            </div>
+          </div>
 
           {/* Documents Input - shown when required */}
           {requiresDocuments && (

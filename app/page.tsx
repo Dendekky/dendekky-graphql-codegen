@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -35,16 +35,23 @@ import { InputModeToggle } from '@/components/input-mode-toggle';
 import { SchemaInput } from '@/components/schema-input';
 import { CopyableCode } from '@/components/copyable-code';
 import { CopyableText } from '@/components/copyable-text';
+import { SchemaExplorerModal } from '@/components/schema-explorer-modal';
 import {
   useCodegenStore,
   useRequiresDocuments,
   useCanGenerate,
   useIsBasicTypescript,
+  useParsedSchema,
+  useSetParsedSchema,
+  useSetSchemaParsingError,
+  useShowSchemaVisualizer,
 } from '@/lib/store';
+import { parseGraphQLSchema, parseSchemaFromIntrospection } from '@/lib/schema-parser';
 
 function GraphQLCodegenContent() {
   const router = useRouter();
   const { setTheme, theme } = useTheme();
+  const [isSchemaExplorerOpen, setIsSchemaExplorerOpen] = useState(false);
 
   // Zustand store hooks
   const {
@@ -85,6 +92,12 @@ function GraphQLCodegenContent() {
   const requiresDocuments = useRequiresDocuments();
   const canGenerate = useCanGenerate();
   const isBasicTypescript = useIsBasicTypescript();
+  
+  // Schema parsing state
+  const parsedSchema = useParsedSchema();
+  const setParsedSchema = useSetParsedSchema();
+  const setSchemaParsingError = useSetSchemaParsingError();
+  const showSchemaVisualizer = useShowSchemaVisualizer();
 
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -127,7 +140,8 @@ function GraphQLCodegenContent() {
         outputFormats,
         documents,
         controller.signal,
-        inputMode === 'schema'
+        inputMode === 'schema',
+        showSchemaVisualizer
       );
 
       // Don't process if request was cancelled
@@ -152,6 +166,30 @@ function GraphQLCodegenContent() {
           /export\s+(type|interface|enum)/g
         );
         setTypeCount(typeMatches ? typeMatches.length : 0);
+
+        // Parse schema for visualization
+        try {
+          if (response.introspection) {
+            // Use introspection result from server (works for both endpoint and schema modes)
+            const parsed = parseSchemaFromIntrospection(response.introspection);
+            setParsedSchema(parsed);
+            setSchemaParsingError(null);
+          } else {
+            // Fallback: parse schema definition directly (schema mode only)
+            if (inputMode === 'schema' && schemaDefinition.trim()) {
+              const parsed = parseGraphQLSchema(schemaDefinition.trim());
+              setParsedSchema(parsed);
+              setSchemaParsingError(null);
+            } else {
+              setParsedSchema(null);
+              setSchemaParsingError(null);
+            }
+          }
+        } catch (schemaError) {
+          console.warn('Failed to parse schema for visualization:', schemaError);
+          setSchemaParsingError(schemaError instanceof Error ? schemaError.message : 'Failed to parse schema');
+          setParsedSchema(null);
+        }
       } else {
         setError(response.error || 'Failed to generate types');
       }
@@ -172,6 +210,8 @@ function GraphQLCodegenContent() {
   const handleClear = useCallback(() => {
     router.push('/');
     clearAll();
+    setParsedSchema(null);
+    setSchemaParsingError(null);
     // Focus the input after clearing
     setTimeout(() => {
       const input = document.querySelector(
@@ -179,7 +219,7 @@ function GraphQLCodegenContent() {
       ) as HTMLInputElement;
       input?.focus();
     }, 100);
-  }, [router, clearAll]);
+  }, [router, clearAll, setParsedSchema, setSchemaParsingError]);
 
   const handleCopy = useCallback(async () => {
     if (!result) return;
@@ -653,10 +693,38 @@ function GraphQLCodegenContent() {
                       className='font-mono text-sm h-full resize-none border-2 border-gray-200 dark:border-gray-700 rounded-xl shadow-inner bg-gray-50/50 dark:bg-gray-900/50 focus:ring-2 focus:ring-purple-500 transition-all duration-200'
                       placeholder='Generated TypeScript types will appear here...'
                     />
-                    <div className='absolute top-3 right-3 px-2 py-1 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 text-xs font-medium rounded-md'>
-                      TypeScript
+                    <div className='absolute top-3 right-3 flex items-center gap-2'>
+                      <div className='relative group'>
+                        <div className='px-2 py-1 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 text-xs font-medium rounded-md cursor-default'>
+                          TypeScript
+                        </div>
+                        {/* Schema Explorer Toggle - shows on hover */}
+                        {parsedSchema && showSchemaVisualizer && (
+                          <button
+                            onClick={() => setIsSchemaExplorerOpen(true)}
+                            className='absolute -left-9 top-0 h-full px-2 bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium rounded-l-md shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center gap-1 z-10'
+                            title='Open Schema Explorer'
+                          >
+                            <Database className='h-3 w-3' />
+                            <span className='hidden sm:inline'>Schema</span>
+                          </button>
+                        )}
+                        {/* Invisible hover area to make it easier to trigger */}
+                        {parsedSchema && showSchemaVisualizer && (
+                          <div className='absolute -left-12 -top-1 -bottom-1 w-20 opacity-0 pointer-events-none' />
+                        )}
+                      </div>
                     </div>
                   </div>
+                  
+                  {/* Schema Explorer Modal */}
+                  {parsedSchema && showSchemaVisualizer && (
+                    <SchemaExplorerModal 
+                      schema={parsedSchema} 
+                      isOpen={isSchemaExplorerOpen}
+                      onClose={() => setIsSchemaExplorerOpen(false)}
+                    />
+                  )}
                 </div>
               )}
 
